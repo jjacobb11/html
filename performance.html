@@ -11,13 +11,16 @@
     th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
     th { background: #eee; }
     .chart { text-align: center; margin: 20px 0; }
-    img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px; }
+    canvas { max-width: 100%; height: auto; }
     .section { background: #fff; padding: 10px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix"></script>
 </head>
 <body>
   <h1>Portfolio Backtest Report</h1>
 
+  <!-- Performance Metrics -->
   <div class="section">
     <h2>Performance Metrics</h2>
     <table>
@@ -34,6 +37,7 @@
     </table>
   </div>
 
+  <!-- Cumulative PnL -->
   <div class="section">
     <h2>Cumulative PnL Comparison</h2>
     <div class="chart">
@@ -41,6 +45,7 @@
     </div>
   </div>
 
+  <!-- Performance Comparison -->
   <div class="section">
     <h2>Performance Comparison</h2>
     <table>
@@ -53,11 +58,62 @@
     </table>
   </div>
 
+  <!-- Monthly Returns Heatmap -->
   <div class="section">
     <h2>Monthly Returns Heatmap</h2>
     <div class="chart">
-      <img src="monthly_heatmap.png" alt="Monthly Returns Heatmap">
+      <canvas id="heatmap"></canvas>
     </div>
   </div>
+
+  <script>
+    const ctx = document.getElementById('heatmap').getContext('2d');
+
+    const years = ["2020","2021","2022","2023","2024","2025","2026"];
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const data = [
+      [null,null,null,null,0.6,-0.4,1.2,0.8,0.7,2.7,3.7,1.0], // 2020
+      [4.7,0.9,-1.7,4.4,39.6,21.2,16.0,12.6,12.0,23.3,0.0,2.6], // 2021
+      [5.1,16.3,-2.9,5.2,5.3,10.9,13.3,8.2,3.3,9.7,10.7,-4.1], // 2022
+      [13.6,-1.1,10.6,3.8,-2.4,11.0,-3.8,-0.3,-0.0,10.3,-0.4,1.8], // 2023
+      [2.8,15.8,18.7,3.4,15.0,-1.6,4.7,1.6,2.5,-0.1,18.3,-4.0], // 2024
+      [11.9,9.4,3.8,8.3,3.9,2.4,10.0,8.3,3.7,1.0,-1.1,0.7], // 2025
+      [6.9,-1.7,null,null,null,null,null,null,null,null,null,null] // 2026
+    ];
+
+    new Chart(ctx, {
+      type: 'matrix',
+      data: {
+        datasets: [{
+          label: 'Monthly Returns',
+          data: data.flatMap((row, i) =>
+            row.map((value, j) => ({x: j, y: i, v: value}))
+          ),
+          backgroundColor(ctx) {
+            const value = ctx.raw.v;
+            if (value === null) return '#ccc';
+            return value >= 0 ? `rgba(0,200,0,${Math.min(1,value/20)})`
+                              : `rgba(200,0,0,${Math.min(1,Math.abs(value)/10)})`;
+          },
+          borderWidth: 1,
+          width(ctx) { return 30; },
+          height(ctx) { return 30; }
+        }]
+      },
+      options: {
+        scales: {
+          x: { ticks: { callback: (v) => months[v] }, offset: true },
+          y: { ticks: { callback: (v) => years[v] }, offset: true }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: ctx => `${years[ctx.raw.y]} ${months[ctx.raw.x]}: ${ctx.raw.v}%`
+            }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
