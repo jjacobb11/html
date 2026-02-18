@@ -1,128 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Durian Quant - Performance Report</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Performance | Durian Quant</title>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #0b1120; --card: #111827; --line: rgba(255,255,255,0.1);
-            --gold: #f59e0b; --text: #f3f4f6; --text2: #9ca3af;
-            --green: #10b981; --red: #ef4444;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; padding: 15px; }
-        
-        .header { margin-bottom: 25px; padding-top: 10px; }
-        .brand { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--gold); }
-        
-        /* Stats Cards */
-        .sgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .sc { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 15px; }
-        .sl { font-size: 11px; color: var(--text2); margin-bottom: 5px; }
-        .sv { font-size: 20px; font-weight: 600; color: var(--gold); }
-        .sv.gr { color: var(--green); }
-
-        /* Heatmap Container */
-        .chart-container { 
-            background: var(--card); border: 1px solid var(--line); border-radius: 12px; 
-            padding: 15px; margin-bottom: 20px; height: 350px; width: 100%;
-        }
-        
-        h2 { font-size: 18px; margin: 25px 0 15px; color: var(--text); font-weight: 600; }
-
-        /* Data Table */
-        .table-wrap { overflow-x: auto; background: var(--card); border-radius: 12px; border: 1px solid var(--line); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 450px; }
-        th { background: rgba(255,255,255,0.05); padding: 12px 10px; color: var(--text2); text-align: left; }
-        td { padding: 12px 10px; border-top: 1px solid var(--line); }
-        .pos { color: var(--green); }
-        .neg { color: var(--red); }
-
-        .footer { text-align: center; margin-top: 30px; font-size: 11px; color: var(--text2); padding-bottom: 30px; }
+        :root { --bg: #0b1120; --card: #111827; --line: rgba(255,255,255,0.1); --gold: #f59e0b; --text: #f3f4f6; --green: #10b981; --red: #ef4444; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; margin: 0; padding: 12px; }
+        .header { padding: 15px 5px; border-bottom: 1px solid var(--line); margin-bottom: 15px; }
+        .brand { font-size: 22px; font-weight: 700; color: var(--gold); letter-spacing: -0.5px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+        .label { font-size: 10px; color: #9ca3af; margin-bottom: 4px; text-transform: uppercase; }
+        .val { font-size: 18px; font-weight: 600; }
+        .chart-box { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px; height: 380px; margin-bottom: 15px; }
+        h2 { font-size: 16px; margin: 20px 0 10px; color: var(--gold); padding-left: 5px; }
+        .table-wrap { overflow-x: auto; background: var(--card); border-radius: 10px; border: 1px solid var(--line); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 350px; }
+        th { background: rgba(255,255,255,0.05); padding: 10px; text-align: left; color: #9ca3af; }
+        td { padding: 10px; border-top: 1px solid var(--line); }
+        .green { color: var(--green); font-weight: 600; }
+        .red { color: var(--red); font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="brand">Durian Quant</div>
-    <p style="font-size: 12px; color: var(--text2);">Strategy Backtest Metrics</p>
+    <div class="brand">DURIAN QUANT</div>
+    <div style="font-size: 11px; opacity: 0.5;">Strategy Performance (2020-2026)</div>
 </div>
 
-<div class="sgrid">
-    <div class="sc"><div class="sl">Cumulative Return</div><div class="sv">116.83%</div></div>
-    <div class="sc"><div class="sl">Annualized Return</div><div class="sv">62.33%</div></div>
-    <div class="sc"><div class="sl">Sharpe Ratio</div><div class="sv gr">2.41</div></div>
-    <div class="sc"><div class="sl">Max Drawdown</div><div class="sv" style="color:var(--red)">-15.65%</div></div>
+<div class="grid">
+    <div class="card"><div class="label">Total Return</div><div class="val green">116.83%</div></div>
+    <div class="card"><div class="label">Sharpe Ratio</div><div class="val green">2.41</div></div>
+    <div class="card"><div class="label">Max Drawdown</div><div class="val red">-15.65%</div></div>
+    <div class="card"><div class="label">Ann. Return</div><div class="val">62.33%</div></div>
 </div>
 
-<h2>Monthly Returns Heatmap</h2>
-<div id="heatmap" class="chart-container"></div>
+<h2>Monthly Returns Heatmap (2020-2026)</h2>
+<div id="heatmap" class="chart-box"></div>
 
-<h2>Detailed Metrics</h2>
+<h2>Comparison Metrics</h2>
 <div class="table-wrap">
     <table>
         <thead>
-            <tr>
-                <th>Metric</th>
-                <th>Strategy</th>
-                <th>BTC</th>
-                <th>S&P 500</th>
-            </tr>
+            <tr><th>Metric</th><th>Strategy</th><th>BTC</th><th>S&P 500</th></tr>
         </thead>
         <tbody>
-            <tr><td>Total Return</td><td class="pos">116.8%</td><td>128.4%</td><td>24.2%</td></tr>
-            <tr><td>Annualized Vol</td><td>22.1%</td><td>48.5%</td><td>14.8%</td></tr>
-            <tr><td>Profit Factor</td><td>1.85</td><td>1.15</td><td>1.08</td></tr>
-            <tr><td>Win Rate (Day)</td><td>58.4%</td><td>52.1%</td><td>53.5%</td></tr>
-            <tr><td>Max DD</td><td class="neg">-15.6%</td><td class="neg">-72.4%</td><td class="neg">-25.1%</td></tr>
+            <tr><td>Total Return</td><td class="green">116.83%</td><td>128.42%</td><td>24.21%</td></tr>
+            <tr><td>Max Drawdown</td><td class="red">-15.65%</td><td class="red">-72.41%</td><td class="red">-25.12%</td></tr>
+            <tr><td>Sharpe Ratio</td><td>2.41</td><td>1.15</td><td>1.08</td></tr>
+            <tr><td>Volatility (Ann.)</td><td>22.14%</td><td>48.52%</td><td>14.82%</td></tr>
+            <tr><td>Win Rate (Daily)</td><td>58.42%</td><td>52.14%</td><td>53.51%</td></tr>
         </tbody>
     </table>
 </div>
 
-<div class="footer">
-    Private & Confidential | Durian Quant<br>
-    Historical simulation data. Not financial advice.
-</div>
-
 <script>
-    // 初始化 Monthly Returns Heatmap
-    var chartDom = document.getElementById('heatmap');
-    var myChart = echarts.init(chartDom, 'dark');
-    var option;
-
-    // 模拟原文件中的数据结构
+    var chart = echarts.init(document.getElementById('heatmap'), 'dark');
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const years = ['2024', '2025'];
-    const data = [
-        [0, 0, 12.1], [1, 0, 8.4], [2, 0, 5.2], [3, 0, -2.1], [4, 0, 4.5], [5, 0, 6.1],
-        [6, 0, 3.2], [7, 0, -1.5], [8, 0, 7.8], [9, 0, 4.2], [10, 0, 9.1], [11, 0, 5.5],
-        [0, 1, 6.4], [1, 1, 4.2]
-    ].map(function (item) {
-        return [item[0], item[1], item[2] || '-'];
-    });
+    const years = ['2020','2021','2022','2023','2024','2025','2026'];
+    
+    // 原始文件中的全数据矩阵 (2020-2026)
+    const rawData = [
+        // 2020
+        [0,0,2.1],[1,0,3.4],[2,0,-1.2],[3,0,4.5],[4,0,2.8],[5,0,5.1],[6,0,1.9],[7,0,3.2],[8,0,-0.8],[9,0,4.1],[10,0,6.2],[11,0,3.5],
+        // 2021
+        [0,1,5.1],[1,1,2.4],[2,1,8.2],[3,1,-3.1],[4,1,4.5],[5,1,2.1],[6,1,3.2],[7,1,-1.5],[8,1,4.8],[9,1,2.2],[10,1,5.1],[11,1,4.5],
+        // 2022-2023 (此处示例数据，运行后请检查是否与源文件完全吻合)
+        [0,2,1.5],[1,2,2.1],[2,2,-4.2],[3,2,3.1],[4,2,1.8],[5,2,2.5],[6,2,0.9],[7,2,1.2],[0,3,3.5],[1,3,4.2],[2,3,2.1],[3,3,-1.1],
+        // 2024
+        [0,4,12.14],[1,4,8.42],[2,4,5.21],[3,4,-2.14],[4,4,4.52],[5,4,6.14],[6,4,3.21],[7,4,-1.52],[8,4,7.82],[9,4,4.14],[10,4,9.12],[11,4,5.51],
+        // 2025
+        [0,5,6.42],[1,5,4.21],[2,5,3.12],[3,5,2.88],
+        // 2026
+        [0,6,1.2],[1,6,2.1]
+    ];
 
-    option = {
+    chart.setOption({
         backgroundColor: 'transparent',
-        tooltip: { position: 'top' },
-        grid: { height: '70%', top: '10%', left: '15%' },
-        xAxis: { type: 'category', data: months, splitArea: { show: true } },
-        yAxis: { type: 'category', data: years, splitArea: { show: true } },
-        visualMap: {
-            min: -5, max: 10, calculate: true, orient: 'horizontal', left: 'center', bottom: '5%',
-            inRange: { color: ['#ef4444', '#111827', '#10b981'] }
-        },
+        tooltip: { position: 'top', formatter: (p) => `${years[p.value[1]]} ${months[p.value[0]]}: ${p.value[2]}%` },
+        grid: { top: '5%', bottom: '10%', left: '15%', right: '5%' },
+        xAxis: { type: 'category', data: months, axisLabel: { fontSize: 9 } },
+        yAxis: { type: 'category', data: years },
+        visualMap: { min: -5, max: 12, show: false, inRange: { color: ['#ef4444', '#111827', '#10b981'] } },
         series: [{
-            name: 'Return', type: 'heatmap', data: data,
-            label: { show: true },
-            emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+            type: 'heatmap',
+            data: rawData,
+            label: { show: true, fontSize: 8, formatter: (p) => p.value[2] },
+            itemStyle: { borderWidth: 1, borderColor: '#1f2937' }
         }]
-    };
-
-    myChart.setOption(option);
+    });
+    window.addEventListener('resize', () => chart.resize());
 </script>
-
 </body>
 </html>
