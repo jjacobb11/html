@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Durian Quant - Performance Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f10; --card: #161618; --line: rgba(255,255,255,0.08);
+            --gold: #d4a853; --text: #f0ebe0; --text2: rgba(240,235,224,0.65);
+            --green: #52b788; --red: #e07a5f;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { 
+            background: var(--bg); color: var(--text); 
+            font-family: 'DM Sans', sans-serif; line-height: 1.6; padding: 20px;
+        }
+        .header { text-align: center; margin-bottom: 30px; padding-top: 10px; }
+        .brand { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--gold); }
+        .title { font-size: 14px; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Stats Grid */
+        .sgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .sc { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 15px; }
+        .sl { font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+        .sv { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--gold); }
+        .sv.gr { color: var(--green); }
+        .sv.rd { color: var(--red); }
+
+        h2 { font-family: 'DM Serif Display', serif; font-size: 20px; margin: 25px 0 15px; color: var(--gold); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+
+        /* Table Styling */
+        .table-wrap { overflow-x: auto; background: var(--card); border-radius: 12px; border: 1px solid var(--line); }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
+        th { background: rgba(255,255,255,0.03); padding: 12px 8px; color: var(--text2); font-weight: 600; }
+        td { padding: 12px 8px; border-top: 1px solid var(--line); }
+        .pos { color: var(--green); }
+        .neg { color: var(--red); }
+
+        /* Details List */
+        .detail-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+        .detail-item span:last-child { color: var(--text2); }
+
+        .footer { text-align: center; margin-top: 40px; font-size: 10px; color: var(--text2); opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="brand">Durian Quant</div>
+    <div class="title">Performance Summary</div>
+</div>
+
+<div class="sgrid">
+    <div class="sc">
+        <div class="sl">Total Return</div>
+        <div class="sv">116.83%</div>
+    </div>
+    <div class="sc">
+        <div class="sl">Annualized Return</div>
+        <div class="sv">62.33%</div>
+    </div>
+    <div class="sc">
+        <div class="sl">Max Drawdown</div>
+        <div class="sv rd">-15.65%</div>
+    </div>
+    <div class="sc">
+        <div class="sl">Sharpe Ratio</div>
+        <div class="sv gr">2.41</div>
+    </div>
+</div>
+
+<h2>Monthly Returns (%)</h2>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th>
+                <th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th>
+                <th style="background:var(--gold-soft); color:var(--gold)">YTD</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2024</td>
+                <td class="pos">12.1</td><td class="pos">8.4</td><td class="pos">5.2</td><td class="neg">-2.1</td><td class="pos">4.5</td><td class="pos">6.1</td>
+                <td class="pos">3.2</td><td class="neg">-1.5</td><td class="pos">7.8</td><td class="pos">4.2</td><td class="pos">9.1</td><td class="pos">5.5</td>
+                <td style="font-weight:bold" class="pos">82.4</td>
+            </tr>
+            <tr>
+                <td>2025</td>
+                <td class="pos">6.4</td><td class="pos">4.2</td><td class="pos">--</td><td>--</td><td>--</td><td>--</td>
+                <td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+                <td style="font-weight:bold" class="pos">10.8</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h2>Backtest Details</h2>
+<div class="detail-item"><span>Time Period</span><span>2024-01-01 to 2025-02-15</span></div>
+<div class="detail-item"><span>Trading Frequency</span><span>Daily Rebalancing</span></div>
+<div class="detail-item"><span>Win Rate</span><span>58.4%</span></div>
+<div class="detail-item"><span>Profit Factor</span><span>1.85</span></div>
+<div class="detail-item"><span>Volatility (Ann.)</span><span>22.1%</span></div>
+
+<div class="footer">
+    Private & Confidential | Durian Quant Systematic Strategy<br>
+    Past performance is not indicative of future results.
+</div>
+
+</body>
+</html>
