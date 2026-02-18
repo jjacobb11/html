@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Durian Quant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0f0f10; --card:#161618; --line:rgba(255,255,255,0.08);
+  --gold:#d4a853; --gold-soft:rgba(212,168,83,0.12);
+  --text:#f0ebe0; --text2:rgba(240,235,224,0.65); --text3:rgba(240,235,224,0.35);
+  --green:#52b788; --red:#e07a5f;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; line-height:1.65; padding-bottom:80px; -webkit-font-smoothing:antialiased; }
+
+/* TOP BAR */
+.topbar { position:fixed; top:0; left:0; right:0; z-index:999; height:52px; background:rgba(15,15,16,0.97); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:0 20px; }
+.brand { font-family:'DM Serif Display',serif; font-size:17px; color:var(--gold); }
+.lang-pills { display:flex; background:rgba(255,255,255,0.07); border-radius:100px; padding:3px; }
+.pill { padding:5px 18px; border-radius:100px; font-size:12px; font-weight:600; letter-spacing:0.05em; cursor:pointer; border:none; background:transparent; color:var(--text3); font-family:'DM Sans',sans-serif; -webkit-appearance:none; transition:all 0.2s; }
+.pill.on { background:var(--gold); color:#0f0f10; }
+
+/* LANG VISIBILITY — default EN shown */
+.zh { display:none; }
+.en { display:block; }
+.zh-i { display:none; }
+.en-i { display:inline; }
+
+/* WRAP */
+.wrap { padding-top:52px; max-width:480px; margin:0 auto; }
+
+/* HERO */
+.hero { padding:36px 20px 32px; position:relative; overflow:hidden; }
+.glow { position:absolute; top:-60px; right:-80px; width:280px; height:280px; background:radial-gradient(circle,rgba(212,168,83,0.08),transparent 70%); pointer-events:none; }
+.badge { display:inline-flex; align-items:center; gap:6px; background:var(--gold-soft); border:1px solid rgba(212,168,83,0.3); border-radius:100px; padding:5px 13px; font-size:11px; font-weight:600; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; margin-bottom:20px; }
+.dot { width:6px; height:6px; border-radius:50%; background:var(--gold); display:inline-block; animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.h1 { font-family:'DM Serif Display',serif; font-size:38px; line-height:1.15; color:var(--text); margin-bottom:14px; }
+.h1 .g { color:var(--gold); }
+.desc { font-size:14px; color:var(--text2); line-height:1.75; margin-bottom:28px; }
+
+/* STATS */
+.sgrid { display:flex; flex-wrap:wrap; gap:10px; }
+.sc { flex:1 1 calc(50% - 5px); min-width:0; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; position:relative; overflow:hidden; }
+.sc::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--gold); opacity:0.6; }
+.sc.gr::before { background:var(--green); }
+.sv { font-family:'DM Serif Display',serif; font-size:28px; color:var(--gold); line-height:1; margin-bottom:6px; margin-top:4px; }
+.sc.gr .sv { color:var(--green); }
+.sv.wh { color:var(--text); font-size:22px; }
+.sl { font-size:11px; color:var(--text3); line-height:1.4; }
+
+/* DIVIDER */
+.div { height:1px; background:linear-gradient(90deg,transparent,var(--line) 20%,var(--line) 80%,transparent); margin:32px 20px; }
+
+/* SECTION */
+.sec { padding:0 20px; margin-bottom:32px; }
+.slbl { font-size:10px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+.slbl::before { content:''; display:block; width:20px; height:1px; background:var(--gold); opacity:0.5; }
+.stitle { font-family:'DM Serif Display',serif; font-size:26px; color:var(--text); margin-bottom:18px; line-height:1.2; }
+
+/* ITEM CARD */
+.ic { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:10px; display:flex; gap:14px; align-items:flex-start; }
+.ii { width:36px; height:36px; min-width:36px; border-radius:8px; background:var(--gold-soft); border:1px solid rgba(212,168,83,0.2); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.ib h3 { font-size:15px; font-weight:600; color:var(--text); margin-bottom:5px; line-height:1.35; }
+.ib p { font-size:13px; color:var(--text2); line-height:1.7; }
+
+/* NOT CARD */
+.nc { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--red); border-radius:10px; padding:15px 16px; margin-bottom:8px; display:flex; gap:12px; align-items:flex-start; }
+.nx { color:var(--red); font-size:13px; font-weight:700; flex-shrink:0; margin-top:3px; }
+.nc p { font-size:13px; color:var(--text2); line-height:1.7; }
+
+/* ALERT */
+.alrt { background:rgba(224,122,95,0.07); border:1px solid rgba(224,122,95,0.2); border-radius:10px; padding:15px 16px; margin-bottom:14px; }
+.at { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--red); margin-bottom:6px; }
+.alrt p { font-size:12px; color:var(--text2); line-height:1.75; }
+
+/* TERMS */
+.tbl { background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+.tr { display:flex; border-bottom:1px solid var(--line); }
+.tr:last-child { border-bottom:none; }
+.tk { padding:15px 16px; font-size:12px; color:var(--text3); width:42%; border-right:1px solid var(--line); display:flex; align-items:center; line-height:1.45; }
+.tv { padding:15px 16px; flex:1; display:flex; flex-direction:column; justify-content:center; }
+.tb { font-family:'DM Serif Display',serif; font-size:22px; color:var(--green); line-height:1; margin-bottom:3px; }
+.tb.gold { color:var(--gold); font-size:15px; line-height:1.4; }
+.tb.wh { color:var(--text); font-size:15px; }
+.tsm { font-size:11px; color:var(--text3); line-height:1.4; }
+
+/* CTA */
+.cta { background:linear-gradient(135deg,#1b1a14,#1c1c1f); border:1px solid rgba(212,168,83,0.25); border-radius:14px; padding:28px 22px; text-align:center; position:relative; overflow:hidden; }
+.cglow { position:absolute; top:-50px; left:50%; transform:translateX(-50%); width:220px; height:220px; background:radial-gradient(circle,rgba(212,168,83,0.07),transparent 70%); pointer-events:none; }
+.clbl { font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.camt { font-family:'DM Serif Display',serif; font-size:52px; color:var(--gold); line-height:1; margin-bottom:10px; }
+.csub { font-size:12px; color:var(--text3); margin-bottom:22px; line-height:1.7; }
+.cbtn { display:block; background:var(--gold); color:#0f0f10; font-size:15px; font-weight:700; padding:16px; border-radius:10px; text-decoration:none; font-family:'DM Sans',sans-serif; }
+
+/* DISC */
+.disc { margin:0 20px 36px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:10px; padding:15px 16px; }
+.disc p { font-size:11px; color:var(--text3); line-height:1.8; }
+
+/* Chinese font overrides — applied via JS class on body */
+body.zh-mode .h1, body.zh-mode .stitle { font-family:'Noto Serif SC',serif !important; font-weight:600 !important; }
+body.zh-mode .desc, body.zh-mode .sl, body.zh-mode .slbl,
+body.zh-mode .ib h3, body.zh-mode .ib p, body.zh-mode .nc p,
+body.zh-mode .alrt p, body.zh-mode .tk, body.zh-mode .tsm,
+body.zh-mode .clbl, body.zh-mode .csub, body.zh-mode .disc p { font-family:'Noto Sans SC',sans-serif !important; font-weight:300 !important; }
+
+/* zh-mode visibility */
+body.zh-mode .zh { display:block; }
+body.zh-mode .en { display:none; }
+body.zh-mode .zh-i { display:inline; }
+body.zh-mode .en-i { display:none; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Durian Quant</div>
+  <div class="lang-pills">
+    <button class="pill on" id="btn-en" onclick="setLang('en')">EN</button>
+    <button class="pill"    id="btn-zh" onclick="setLang('zh')">中文</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="glow"></div>
+    <div class="badge">
+      <span class="dot"></span>
+      <span class="en-i">Private Investment Memo</span>
+      <span class="zh-i">私募投资备忘录</span>
+    </div>
+    <h1 class="h1">
+      <span class="en">Quantitative <span class="g">Growth</span> Strategy</span>
+      <span class="zh">量化<span class="g">增长</span>策略</span>
+    </h1>
+    <p class="desc en">A CTA-style systematic long/short strategy with multi-alpha portfolio construction. Rules-based, data-driven, emotion-free — running 24/7 in crypto markets.</p>
+    <p class="desc zh">CTA 风格系统化多空交易 + 多策略组合构建。规则驱动，数据决策，无情绪干预 — 全天候 24/7 运行于数字资产市场。</p>
+    <div class="sgrid">
+      <div class="sc">
+        <div class="sv">~60%</div>
+        <div class="sl en-i">Target Annual Return (gross)</div>
+        <div class="sl zh-i">目标年化收益（Gross）</div>
+      </div>
+      <div class="sc gr">
+        <div class="sv">&lt;20%</div>
+        <div class="sl en-i">Target Max Drawdown</div>
+        <div class="sl zh-i">目标最大回撤</div>
+      </div>
+      <div class="sc">
+        <div class="sv wh">0%</div>
+        <div class="sl en-i">Management Fee</div>
+        <div class="sl zh-i">管理费</div>
+      </div>
+      <div class="sc">
+        <div class="sv wh">$10K</div>
+        <div class="sl en-i">Min. Investment</div>
+        <div class="sl zh-i">最低投资额</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- WHAT THIS IS -->
+  <div class="sec">
+    <div class="slbl"><span class="en-i">Strategy Overview</span><span class="zh-i">策略概述</span></div>
+    <h2 class="stitle"><span class="en-i">What This Is</span><span class="zh-i">这是什么</span></h2>
+
+    <div class="ic">
+      <div class="ii">⚙️</div>
+      <div class="ib">
+        <h3><span class="en-i">Systematic Rule-Based Execution</span><span class="zh-i">系统化规则执行</span></h3>
+        <p class="en">All entries, exits, sizing, and de-risking are predefined, testable rules — no discretionary overrides or emotional decisions. Runs 24/7 with continuous data processing.</p>
+        <p class="zh">进出场、仓位 sizing 与降风险全部由可回测的预设规则驱动，无主观判断或情绪干预。全天候 24/7 运行，持续处理海量数据。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">📊</div>
+      <div class="ib">
+        <h3><span class="en-i">Data-Driven Process</span><span class="zh-i">数据驱动决策</span></h3>
+        <p class="en">Continuously integrates large datasets — price, volume, derivatives, and more — to drive signals and risk decisions at every step.</p>
+        <p class="zh">持续处理与整合价格、成交量、衍生品等数据，用数据驱动信号与风控决策。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">🔀</div>
+      <div class="ib">
+        <h3><span class="en-i">Multi-Alpha Portfolio</span><span class="zh-i">多 Alpha 组合</span></h3>
+        <p class="en">Independent sub-strategies (trend, mean reversion, volatility/risk-premia) with correlation controls — targeting durable, risk-adjusted returns rather than regime-specific spikes.</p>
+        <p class="zh">趋势、均值回归、波动/风险溢价等多个子策略并行，通过相关性控制降低单一策略失效风险，追求可持续的风险调整后收益。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">🛡️</div>
+      <div class="ib">
+        <h3><span class="en-i">Survival-First Philosophy</span><span class="zh-i">生存第一理念</span></h3>
+        <p class="en">Survival-first risk budgeting, verifiable through backtests, ongoing monitoring, and iterative reviews. Human greed and fear removed from the process entirely.</p>
+        <p class="zh">以生存下来为第一原则的风险预算，通过回测、持续监控与复盘迭代实现可验证性。把人性的贪婪与恐惧从交易过程中彻底剔除。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- WHAT THIS IS NOT -->
+  <div class="sec">
+    <div class="slbl"><span class="en-i">Clarifications</span><span class="zh-i">澄清说明</span></div>
+    <h2 class="stitle"><span class="en-i">What This Is Not</span><span class="zh-i">这不是什么</span></h2>
+
+    <div class="nc">
+      <div class="nx">✕</div>
+      <p class="en">Not a guaranteed, principal-protected, or fixed-income product. Capital is at risk in all market conditions.</p>
+      <p class="zh">不是保本、固定收益或稳赚产品。在所有市场条件下本金均存在风险。</p>
+    </div>
+    <div class="nc">
+      <div class="nx">✕</div>
+      <p class="en">Not discretionary market-timing or long-only hold-and-hope investing. Every decision is strictly rule-based.</p>
+      <p class="zh">不做主观择时，不做长期信仰持仓。每一个交易决策严格由规则驱动。</p>
+    </div>
+    <div class="nc">
+      <div class="nx">✕</div>
+      <p class="en">Not a martingale or averaging-down strategy. We never increase exposure to losing positions to recover losses.</p>
+      <p class="zh">不做持仓摊平或马丁格尔式加仓。我们从不对亏损仓位加仓以挽回损失。</p>
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- RISK CONTROLS -->
+  <div class="sec">
+    <div class="slbl"><span class="en-i">Risk Framework</span><span class="zh-i">风控框架</span></div>
+    <h2 class="stitle"><span class="en-i">Key Risk Controls</span><span class="zh-i">关键风控机制</span></h2>
+
+    <div class="alrt">
+      <div class="at"><span class="en-i">⚠ Risk Reality</span><span class="zh-i">⚠ 风险现实</span></div>
+      <p class="en">Risk is the core of our portfolio construction, not an afterthought. Drawdowns are inherent in volatile markets. We target &lt;20% peak-to-trough — a design target, not a guarantee. Extreme regimes may approach this level.</p>
+      <p class="zh">风险管理不是事后补充，而是整个组合构建的核心。回撤是波动市场中的必然部分。我们将 &lt;20% 最大回撤作为设计目标，非硬性保证。极端行情可能接近这个水平。</p>
+    </div>
+
+    <div class="ic">
+      <div class="ii">💰</div>
+      <div class="ib">
+        <h3><span class="en-i">Risk Budgets</span><span class="zh-i">风险预算</span></h3>
+        <p class="en">Strict caps per strategy, asset, and direction to limit concentration and prevent overexposure to any single risk source.</p>
+        <p class="zh">对子策略、标的、方向暴露设定严格的风险额度，限制集中度，防止单一风险来源过度暴露。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">🔗</div>
+      <div class="ib">
+        <h3><span class="en-i">Correlation Constraints</span><span class="zh-i">相关性约束</span></h3>
+        <p class="en">Prevents stacking highly correlated bets across alphas — ensuring diversification is real, not just theoretical.</p>
+        <p class="zh">避免多个策略在同一时刻高度同向暴露堆叠，确保分散化真实有效，而非仅停留于理论层面。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">⚡</div>
+      <div class="ib">
+        <h3><span class="en-i">Dynamic De-Risking</span><span class="zh-i">动态降风险</span></h3>
+        <p class="en">Automated exposure reduction or full pause triggered by elevated volatility, drawdown thresholds, or loss streaks. Zero human delay.</p>
+        <p class="zh">当波动率升高、回撤触及阈值或连亏时，自动减仓或暂停。无人工延迟。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">🔒</div>
+      <div class="ib">
+        <h3><span class="en-i">Position &amp; Leverage Limits</span><span class="zh-i">仓位与杠杆限制</span></h3>
+        <p class="en">Hard caps on risk contributions. Maximum 2x leverage as an absolute ceiling — not a constant level. Backtests shown unlevered.</p>
+        <p class="zh">对风险贡献设定硬性上限。最高 2x 作为绝对风险上限，非持续使用水平。回测展示均为未使用杠杆状态。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- TERMS & FEES -->
+  <div class="sec">
+    <div class="slbl"><span class="en-i">Fee Structure</span><span class="zh-i">费用结构</span></div>
+    <h2 class="stitle"><span class="en-i">Terms &amp; Fees</span><span class="zh-i">合作条款</span></h2>
+
+    <div class="tbl">
+      <div class="tr">
+        <div class="tk"><span class="en-i">Management Fee</span><span class="zh-i">管理费</span></div>
+        <div class="tv">
+          <div class="tb">0%</div>
+          <div class="tsm"><span class="en-i">Industry typical: ~1–2% / year</span><span class="zh-i">行业典型：每年约 1%–2%</span></div>
+        </div>
+      </div>
+      <div class="tr">
+        <div class="tk"><span class="en-i">Entry / Exit Fee</span><span class="zh-i">申购 / 赎回费</span></div>
+        <div class="tv">
+          <div class="tb">0%</div>
+          <div class="tsm"><span class="en-i">Industry typical: ~0–2%, some impose windows</span><span class="zh-i">行业典型：通常 0%–2%，部分产品设有赎回限制</span></div>
+        </div>
+      </div>
+      <div class="tr">
+        <div class="tk"><span class="en-i">Performance Split</span><span class="zh-i">绩效分成</span></div>
+        <div class="tv">
+          <div class="tb gold"><span class="en-i">Investor 60% / Manager 40%</span><span class="zh-i">客户 60% / 管理方 40%</span></div>
+        </div>
+      </div>
+      <div class="tr">
+        <div class="tk"><span class="en-i">Settlement</span><span class="zh-i">结算频率</span></div>
+        <div class="tv">
+          <div class="tb wh"><span class="en-i">Quarterly / Yearly</span><span class="zh-i">季度 / 年度</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- RISK DISCLOSURES -->
+  <div class="sec">
+    <div class="slbl"><span class="en-i">Risk Disclosures</span><span class="zh-i">风险揭示</span></div>
+    <h2 class="stitle"><span class="en-i">Know the Risks</span><span class="zh-i">了解风险</span></h2>
+
+    <div class="ic">
+      <div class="ii">📉</div>
+      <div class="ib">
+        <h3><span class="en-i">Capital Loss</span><span class="zh-i">本金损失</span></h3>
+        <p class="en">Crypto markets are highly volatile. Losses can be substantial. Only allocate funds not needed for the next 12 months.</p>
+        <p class="zh">数字资产价格波动极大，可能出现较大亏损。请仅投入 12 个月内完全不需要动用的资金。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">⚠️</div>
+      <div class="ib">
+        <h3><span class="en-i">Leverage Risk</span><span class="zh-i">杠杆风险</span></h3>
+        <p class="en">Leverage amplifies both gains and losses. Extreme market events can cause rapid drawdowns and potential liquidation.</p>
+        <p class="zh">杠杆会放大波动与亏损，极端情况下可能触发强平。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">🏦</div>
+      <div class="ib">
+        <h3><span class="en-i">Counterparty / Exchange Risk</span><span class="zh-i">交易所与对手方风险</span></h3>
+        <p class="en">Exchange credit, operational failure, and regulatory actions may negatively impact held assets.</p>
+        <p class="zh">交易所信用、系统风险、监管变化均可能造成损失。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">💻</div>
+      <div class="ib">
+        <h3><span class="en-i">Technology &amp; Operational Risk</span><span class="zh-i">技术与操作风险</span></h3>
+        <p class="en">Software failure, networking issues, key loss, and on-chain delays can all impact strategy performance or asset accessibility.</p>
+        <p class="zh">系统故障、网络中断、密钥丢失、链上拥堵等均可能影响策略表现或资产可访问性。</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ii">📋</div>
+      <div class="ib">
+        <h3><span class="en-i">Backtest Limitations</span><span class="zh-i">回测局限</span></h3>
+        <p class="en">Historical simulations cannot cover all future scenarios. Past performance does not predict future results.</p>
+        <p class="zh">历史数据与假设无法覆盖未来所有极端情景。历史表现不代表未来结果。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="div"></div>
+
+  <!-- CTA -->
+  <div class="sec">
+    <div class="slbl"><span class="en-i">Get Started</span><span class="zh-i">开始投资</span></div>
+    <div class="cta">
+      <div class="cglow"></div>
+      <div class="clbl"><span class="en-i">Minimum Investment</span><span class="zh-i">最低投资额</span></div>
+      <div class="camt">$10K</div>
+      <p class="csub en">USD or equivalent USDT / USDC.<br>Only allocate capital you do not need for the next 12 months.</p>
+      <p class="csub zh">USD 或等值 USDT / USDC。<br>请只投入 12 个月内完全不需要动用的资金。</p>
+      <a href="mailto:durianquant@gmail.com" class="cbtn">
+        <span class="en-i">Get in Touch &nbsp;→</span>
+        <span class="zh-i">联系我们 &nbsp;→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="disc">
+    <p class="en">This memo is for informational discussion only and does not constitute an offer, solicitation, or investment advice. Returns are not guaranteed; capital is at risk. Historical performance and backtests do not predict future results. Allocate only funds not needed for the next 12 months.</p>
+    <p class="zh">本页面仅用于信息沟通，不构成公开募集、要约或投资建议。收益非保证，投资有风险。历史表现与回测数据不代表未来结果。请仅投入 12 个月内完全不需要动用的资金。</p>
+  </div>
+
+</div>
+
+<script>
+function setLang(lang) {
+  var isZh = (lang === 'zh');
+  document.body.className = isZh ? 'zh-mode' : '';
+  document.getElementById('btn-en').className = isZh ? 'pill' : 'pill on';
+  document.getElementById('btn-zh').className = isZh ? 'pill on' : 'pill';
+}
+</script>
+</body>
+</html>
