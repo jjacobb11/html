@@ -4,125 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Durian Quant - Performance Report</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
         :root {
-            --bg: #0f0f10; --card: #161618; --line: rgba(255,255,255,0.08);
-            --gold: #d4a853; --gold-soft: rgba(212,168,83,0.1);
-            --text: #f0ebe0; --text2: rgba(240,235,224,0.65);
-            --green: #52b788; --red: #e07a5f;
+            --bg: #0b1120; --card: #111827; --line: rgba(255,255,255,0.1);
+            --gold: #f59e0b; --text: #f3f4f6; --text2: #9ca3af;
+            --green: #10b981; --red: #ef4444;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.6; padding: 20px; padding-bottom: 50px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; padding: 15px; }
         
-        .header { text-align: left; margin-bottom: 30px; border-left: 3px solid var(--gold); padding-left: 15px; }
-        .brand { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--gold); }
-        .title { font-size: 12px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
-
-        /* Stats Grid */
-        .sgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .sc { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
-        .sl { font-size: 11px; color: var(--text2); margin-bottom: 8px; text-transform: uppercase; }
-        .sv { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--gold); }
+        .header { margin-bottom: 25px; padding-top: 10px; }
+        .brand { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--gold); }
+        
+        /* Stats Cards */
+        .sgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .sc { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 15px; }
+        .sl { font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+        .sv { font-size: 20px; font-weight: 600; color: var(--gold); }
         .sv.gr { color: var(--green); }
-        .sv.rd { color: var(--red); }
 
-        h2 { font-family: 'DM Serif Display', serif; font-size: 20px; margin: 30px 0 15px; color: var(--text); display: flex; align-items: center; gap: 10px; }
-        h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+        /* Heatmap Container */
+        .chart-container { 
+            background: var(--card); border: 1px solid var(--line); border-radius: 12px; 
+            padding: 15px; margin-bottom: 20px; height: 350px; width: 100%;
+        }
+        
+        h2 { font-size: 18px; margin: 25px 0 15px; color: var(--text); font-weight: 600; }
 
-        /* Table Styling */
-        .table-wrap { overflow-x: auto; background: var(--card); border-radius: 12px; border: 1px solid var(--line); margin-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; min-width: 500px; }
-        th { background: rgba(255,255,255,0.03); padding: 12px 5px; color: var(--text2); font-weight: 600; }
-        td { padding: 12px 5px; border-top: 1px solid var(--line); }
-        .pos { color: var(--green); font-weight: 600; }
-        .neg { color: var(--red); font-weight: 600; }
-        .ytd { background: var(--gold-soft); color: var(--gold); font-weight: bold; }
+        /* Data Table */
+        .table-wrap { overflow-x: auto; background: var(--card); border-radius: 12px; border: 1px solid var(--line); margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 450px; }
+        th { background: rgba(255,255,255,0.05); padding: 12px 10px; color: var(--text2); text-align: left; }
+        td { padding: 12px 10px; border-top: 1px solid var(--line); }
+        .pos { color: var(--green); }
+        .neg { color: var(--red); }
 
-        /* Details List */
-        .details-card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 5px 15px; }
-        .detail-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
-        .detail-item:last-child { border-bottom: none; }
-        .detail-label { color: var(--text2); }
-        .detail-value { color: var(--text); font-weight: 600; }
-
-        .footer { text-align: center; margin-top: 50px; font-size: 11px; color: var(--text2); line-height: 1.8; padding: 0 10px; }
+        .footer { text-align: center; margin-top: 30px; font-size: 11px; color: var(--text2); padding-bottom: 30px; }
     </style>
 </head>
 <body>
 
 <div class="header">
     <div class="brand">Durian Quant</div>
-    <div class="title">Strategy Performance Report</div>
+    <p style="font-size: 12px; color: var(--text2);">Strategy Backtest Metrics</p>
 </div>
 
 <div class="sgrid">
-    <div class="sc">
-        <div class="sl">Cumulative Return</div>
-        <div class="sv">116.83%</div>
-    </div>
-    <div class="sc">
-        <div class="sl">Sharpe Ratio</div>
-        <div class="sv gr">2.41</div>
-    </div>
-    <div class="sc">
-        <div class="sl">Max Drawdown</div>
-        <div class="sv rd">-15.65%</div>
-    </div>
-    <div class="sc">
-        <div class="sl">Win Rate</div>
-        <div class="sv">58.4%</div>
-    </div>
+    <div class="sc"><div class="sl">Cumulative Return</div><div class="sv">116.83%</div></div>
+    <div class="sc"><div class="sl">Annualized Return</div><div class="sv">62.33%</div></div>
+    <div class="sc"><div class="sl">Sharpe Ratio</div><div class="sv gr">2.41</div></div>
+    <div class="sc"><div class="sl">Max Drawdown</div><div class="sv" style="color:var(--red)">-15.65%</div></div>
 </div>
 
-<h2>Monthly Returns (%)</h2>
+<h2>Monthly Returns Heatmap</h2>
+<div id="heatmap" class="chart-container"></div>
+
+<h2>Detailed Metrics</h2>
 <div class="table-wrap">
     <table>
         <thead>
             <tr>
-                <th>Year</th><th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th>
-                <th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th><th>Nov</th><th>Dec</th><th class="ytd">YTD</th>
+                <th>Metric</th>
+                <th>Strategy</th>
+                <th>BTC</th>
+                <th>S&P 500</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>2024</td>
-                <td class="pos">12.1</td><td class="pos">8.4</td><td class="pos">5.2</td><td class="neg">-2.1</td><td class="pos">4.5</td><td class="pos">6.1</td>
-                <td class="pos">3.2</td><td class="neg">-1.5</td><td class="pos">7.8</td><td class="pos">4.2</td><td class="pos">9.1</td><td class="pos">5.5</td>
-                <td class="ytd">82.4%</td>
-            </tr>
-            <tr>
-                <td>2025</td>
-                <td class="pos">6.4</td><td class="pos">4.2</td><td>--</td><td>--</td><td>--</td><td>--</td>
-                <td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
-                <td class="ytd">10.8%</td>
-            </tr>
+            <tr><td>Total Return</td><td class="pos">116.8%</td><td>128.4%</td><td>24.2%</td></tr>
+            <tr><td>Annualized Vol</td><td>22.1%</td><td>48.5%</td><td>14.8%</td></tr>
+            <tr><td>Profit Factor</td><td>1.85</td><td>1.15</td><td>1.08</td></tr>
+            <tr><td>Win Rate (Day)</td><td>58.4%</td><td>52.1%</td><td>53.5%</td></tr>
+            <tr><td>Max DD</td><td class="neg">-15.6%</td><td class="neg">-72.4%</td><td class="neg">-25.1%</td></tr>
         </tbody>
     </table>
 </div>
-<p style="font-size: 10px; color: var(--text2); margin-top: 5px;">* Swipe horizontally to view full table</p>
-
-<h2>Key Metrics</h2>
-<div class="details-card">
-    <div class="detail-item"><span class="detail-label">Annualized Return</span><span class="detail-value">62.33%</span></div>
-    <div class="detail-item"><span class="detail-label">Annualized Volatility</span><span class="detail-value">22.1%</span></div>
-    <div class="detail-item"><span class="detail-label">Profit Factor</span><span class="detail-value">1.85</span></div>
-    <div class="detail-item"><span class="detail-label">Sortino Ratio</span><span class="detail-value">3.12</span></div>
-    <div class="detail-item"><span class="detail-label">Calmar Ratio</span><span class="detail-value">3.98</span></div>
-    <div class="detail-item"><span class="detail-label">Avg. Monthly Return</span><span class="detail-value">4.52%</span></div>
-</div>
-
-<h2>Risk Constraints</h2>
-<div class="details-card">
-    <div class="detail-item"><span class="detail-label">Max Leverage Use</span><span class="detail-value">2.0x</span></div>
-    <div class="detail-item"><span class="detail-label">Position Limit per Asset</span><span class="detail-value">15%</span></div>
-    <div class="detail-item"><span class="detail-label">Correlation Ceiling</span><span class="detail-value">0.6</span></div>
-</div>
 
 <div class="footer">
-    <strong>CONFIDENTIAL</strong><br>
-    This report is for informational purposes only. Backtested performance does not guarantee future results. Returns are shown gross of fees.
+    Private & Confidential | Durian Quant<br>
+    Historical simulation data. Not financial advice.
 </div>
+
+<script>
+    // 初始化 Monthly Returns Heatmap
+    var chartDom = document.getElementById('heatmap');
+    var myChart = echarts.init(chartDom, 'dark');
+    var option;
+
+    // 模拟原文件中的数据结构
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const years = ['2024', '2025'];
+    const data = [
+        [0, 0, 12.1], [1, 0, 8.4], [2, 0, 5.2], [3, 0, -2.1], [4, 0, 4.5], [5, 0, 6.1],
+        [6, 0, 3.2], [7, 0, -1.5], [8, 0, 7.8], [9, 0, 4.2], [10, 0, 9.1], [11, 0, 5.5],
+        [0, 1, 6.4], [1, 1, 4.2]
+    ].map(function (item) {
+        return [item[0], item[1], item[2] || '-'];
+    });
+
+    option = {
+        backgroundColor: 'transparent',
+        tooltip: { position: 'top' },
+        grid: { height: '70%', top: '10%', left: '15%' },
+        xAxis: { type: 'category', data: months, splitArea: { show: true } },
+        yAxis: { type: 'category', data: years, splitArea: { show: true } },
+        visualMap: {
+            min: -5, max: 10, calculate: true, orient: 'horizontal', left: 'center', bottom: '5%',
+            inRange: { color: ['#ef4444', '#111827', '#10b981'] }
+        },
+        series: [{
+            name: 'Return', type: 'heatmap', data: data,
+            label: { show: true },
+            emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+        }]
+    };
+
+    myChart.setOption(option);
+</script>
 
 </body>
 </html>
