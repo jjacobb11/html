@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>PRIVATE INVESTMENT MEMO - Portfolio Backtest</title>
+  <title>Portfolio Backtest Report</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 手机适配 -->
   <style>
     body { 
@@ -13,20 +13,30 @@
     }
     header {
       background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
-      padding: 20px;
+      padding: 25px;
       text-align: center;
       border-bottom: 2px solid #444;
     }
     header h1 {
-      font-size: 22px;
-      color: #ffcc00; /* 独特标题颜色 */
+      font-size: 26px;
+      color: #ffcc00; /* 黄色字体 */
       margin: 0;
       letter-spacing: 1px;
+      font-weight: bold;
     }
     header h2 {
       font-size: 14px;
       color: #aaa;
-      margin: 5px 0 0;
+      margin: 8px 0 0;
+    }
+    .meta {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #ccc;
+    }
+    .meta span {
+      display: block;
+      margin: 3px 0;
     }
     table { 
       border-collapse: collapse; 
@@ -47,7 +57,7 @@
     }
     .section h2 {
       text-align: center;
-      color: #ffcc00;
+      color: #ffcc00; /* 黄色标题 */
       font-size: 18px;
       margin-bottom: 10px;
     }
@@ -76,9 +86,14 @@
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <h1>PRIVATE INVESTMENT MEMO</h1>
-    <h2>Quantitative Growth Strategy - Portfolio Backtest</h2>
+    <h1>Portfolio Backtest Report</h1>
+    <h2>Durian Quant</h2>
+    <div class="meta">
+      <span><strong>Period:</strong> 2020-05-01 → 2026-02-02</span>
+      <span><strong>Strategies:</strong> 18</span>
+    </div>
   </header>
 
   <!-- Performance Metrics -->
