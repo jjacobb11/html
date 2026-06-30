@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Jacob Wong — Training Journal</title>
+<style>
+  :root {
+    --bg: #0e0f11;
+    --paper: #16181c;
+    --card: #1c1f25;
+    --ink: #e8e6e0;
+    --ink-soft: #9b9890;
+    --ink-mute: #5a5855;
+    --line: rgba(255,255,255,0.08);
+    --line-bright: rgba(255,255,255,0.15);
+
+    --klscm: #e0664a;
+    --klscm-soft: rgba(224,102,74,0.14);
+    --shanghai: #5aa8d8;
+    --shanghai-soft: rgba(90,168,216,0.14);
+
+    --easy: #5ecb9e;
+    --easy-soft: rgba(94,203,158,0.13);
+    --tempo: #f0b050;
+    --tempo-soft: rgba(240,176,80,0.13);
+    --threshold: #f0784a;
+    --threshold-soft: rgba(240,120,74,0.13);
+    --interval: #b088f0;
+    --interval-soft: rgba(176,136,240,0.13);
+    --vo2: #f06090;
+    --vo2-soft: rgba(240,96,144,0.13);
+    --long: #5ab0ef;
+    --long-soft: rgba(90,176,239,0.13);
+    --rest: #6a675f;
+    --rest-soft: rgba(255,255,255,0.04);
+
+    --warn: #f0b050;
+    --warn-soft: rgba(240,176,80,0.12);
+    --bad: #f0784a;
+    --bad-soft: rgba(240,120,74,0.12);
+    --good: #5ecb9e;
+    --good-soft: rgba(94,203,158,0.12);
+
+    --accent: #d9a679;
+
+    --serif: Georgia, 'Iowan Old Style', serif;
+    --sans: -apple-system, 'Helvetica Neue', sans-serif;
+    --mono: 'SF Mono', 'IBM Plex Mono', monospace;
+
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    overscroll-behavior-y: none;
+    padding-bottom: calc(64px + var(--safe-bottom));
+  }
+
+  /* Fallback message shown if JS fails to boot */
+  #bootError {
+    display: none;
+    padding: 60px 24px;
+    text-align: center;
+  }
+  #bootError.show { display: block; }
+  #bootError h2 { font-family: var(--serif); font-size: 20px; margin-bottom: 12px; }
+  #bootError p { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+
+  noscript {
+    display: block;
+    padding: 60px 24px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  /* ============ TOP BAR ============ */
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    padding: calc(14px + var(--safe-top)) 18px 12px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar .id .name { font-family: var(--serif); font-size: 16px; font-weight: 600; }
+  .topbar .id .tag { font-size: 10px; color: var(--ink-mute); letter-spacing: 0.3px; }
+  .topbar .races { display: flex; gap: 6px; }
+  .topbar .race-chip {
+    font-family: var(--mono); font-size: 9.5px; padding: 4px 8px; border-radius: 20px;
+    display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .topbar .race-chip .dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  /* ============ VIEWS ============ */
+  .view { display: none; padding: 18px 16px 28px; min-height: 60vh; }
+  .view.active { display: block; }
+
+  .view-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 6px; }
+  .view-title { font-family: var(--serif); font-size: 24px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.2; margin-bottom: 10px; }
+  .view-lede { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; line-height: 1.65; }
+  .view-lede strong { color: var(--ink); font-weight: 600; }
+  .sub-title { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 24px 0 12px; letter-spacing: -0.1px; color: var(--ink); }
+  .sub-title:first-of-type { margin-top: 0; }
+
+  /* ============ HERO ============ */
+  .hero {
+    background: linear-gradient(165deg, #1a1d22, #121316);
+    margin: -18px -16px 22px; padding: 26px 20px 22px;
+    border-radius: 0 0 18px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-eyebrow { font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 10px; }
+  .hero h1 { font-family: var(--serif); font-size: 25px; font-weight: 600; letter-spacing: -0.4px; line-height: 1.2; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero-sub { font-size: 12.5px; color: var(--ink-soft); margin-top: 12px; line-height: 1.65; }
+  .hero-races { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+  .hero-race-card { border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); }
+  .hero-race-card .hrc-date { font-family: var(--mono); font-size: 9px; color: var(--ink-mute); letter-spacing: 0.4px; }
+  .hero-race-card .hrc-name { font-family: var(--serif); font-size: 14px; font-weight: 600; margin-top: 2px; }
+  .hero-race-card .hrc-target { font-size: 10.5px; color: var(--ink-soft); text-align: right; }
+  .hero-stats { display: flex; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .hero-stat { flex: 1; }
+  .hero-stat .hs-val { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--accent); }
+  .hero-stat .hs-label { font-size: 9px; color: var(--ink-mute); margin-top: 1px; line-height: 1.3; }
+
+  /* ============ COMPONENTS ============ */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+  .stat-cell { background: var(--card); padding: 12px 13px; }
+  .stat-cell .lbl { font-size: 9.5px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+  .stat-cell .val { font-family: var(--serif); font-size: 17px; font-weight: 600; }
+  .stat-cell .sub { font-size: 10px; color: var(--ink-mute); margin-top: 1px; }
+
+  .note { padding: 11px 13px; border-radius: 0 8px 8px 0; margin-bottom: 8px; font-size: 12.5px; line-height: 1.6; }
+  .note.info { background: var(--good-soft); border-left: 3px solid var(--good); color: var(--ink); }
+  .note.warn { background: var(--warn-soft); border-left: 3px solid var(--warn); color: var(--ink); }
+  .note.bad { background: var(--bad-soft); border-left: 3px solid var(--bad); color: var(--ink); }
+  .note strong { font-weight: 600; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 15px; margin-bottom: 12px; }
+  .card h4 { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-mute); margin-bottom: 8px; }
+  .card p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
+  .card p strong { color: var(--ink); font-weight: 600; }
+  .card p + p { margin-top: 6px; }
+
+  .dl-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 12px; gap: 10px; }
+  .dl-row:last-child { border-bottom: none; }
+  .dl-row .k { color: var(--ink-soft); flex-shrink: 0; }
+  .dl-row .v { font-weight: 600; color: var(--ink); text-align: right; }
+  .dl-row .v.good { color: var(--good); } .dl-row .v.warn { color: var(--warn); } .dl-row .v.bad { color: var(--bad); }
+  .dl-row .z { display: block; font-size: 10px; color: var(--ink-mute); font-weight: 400; margin-top: 1px; }
+
+  /* Week pattern */
+  .wk-table { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .wk-phase-label { font-family: var(--mono); font-size: 10px; color: var(--ink-mute); letter-spacing: 0.4px; margin: 14px 0 6px; text-transform: uppercase; }
+  .wk-row { display: grid; grid-template-columns: 36px 1fr; gap: 8px; align-items: center; }
+  .wk-day { font-family: var(--mono); font-size: 10px; color: var(--ink-mute); text-align: center; }
+  .wk-cell { border-radius: 7px; padding: 8px 11px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--line); }
+  .wk-cell.rest-cell { background: var(--rest-soft); }
+  .wk-type { font-size: 9px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; }
+  .wk-detail { font-size: 10.5px; color: var(--ink-soft); text-align: right; }
+  .wk-detail strong { color: var(--ink); display: block; font-size: 11.5px; }
+
+  /* Calendar */
+  .cal-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .cal-tabs::-webkit-scrollbar { display: none; }
+  .cal-tab { flex-shrink: 0; font-family: var(--mono); font-size: 11px; padding: 7px 13px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); color: var(--ink-soft); }
+  .cal-tab.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 16px; }
+  .leg-item { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--ink-soft); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  .cal-month-hdr { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 2px; padding-bottom: 8px; border-bottom: 2px solid var(--line-bright); }
+  .cal-month-name { font-family: var(--serif); font-size: 18px; font-weight: 600; }
+  .cal-month-name em { font-style: normal; color: var(--klscm); }
+  .cal-month-name.shanghai-phase em { color: var(--shanghai); }
+  .cal-month-meta { font-size: 10px; color: var(--ink-mute); text-align: right; line-height: 1.5; }
+  .cal-month-meta strong { color: var(--ink-soft); }
+
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 10px; }
+  .cal-hdr { text-align: center; font-size: 8.5px; font-weight: 600; color: var(--ink-mute); letter-spacing: 0.3px; padding-bottom: 4px; }
+  .cal-day {
+    min-height: 76px; border-radius: 6px; padding: 4px 5px; background: var(--card);
+    border: 1px solid var(--line); display: flex; flex-direction: column;
+    justify-content: flex-start; gap: 1px; position: relative; overflow: hidden;
+  }
+  .cal-day.empty { background: transparent; border: none; }
+  .cal-day.rest { background: var(--rest-soft); }
+  .cal-day .dnum { font-family: var(--mono); font-size: 8px; color: var(--ink-mute); }
+  .cal-day .dtag { font-size: 6.5px; font-weight: 700; letter-spacing: 0.2px; padding: 1px 3px; border-radius: 2px; text-transform: uppercase; width: fit-content; max-width: 100%; }
+  .cal-day .dtitle { font-size: 7.8px; font-weight: 600; color: var(--ink); line-height: 1.25; margin-top: 1px; }
+  .cal-day .dpace { font-size: 7.3px; color: var(--ink-soft); line-height: 1.2; font-family: var(--mono); }
+  .cal-day .dwucd { font-size: 6.6px; color: var(--ink-mute); line-height: 1.2; margin-top: auto; }
+  .cal-day.race-day { background: var(--ink); border-color: var(--accent); }
+  .cal-day.race-day .dnum { color: rgba(232,230,224,0.5); }
+  .cal-day.race-day .dtitle { color: var(--accent); font-size: 8.3px; }
+  .cal-day:active { transform: scale(0.95); transition: transform 0.1s; }
+
+  .pace-table { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin: 16px 0; }
+  .pace-row { display: flex; justify-content: space-between; padding: 8px 13px; border-bottom: 1px solid var(--line); font-size: 11.5px; align-items: baseline; background: var(--card); }
+  .pace-row:last-child { border-bottom: none; }
+  .pace-row .pl { color: var(--ink-soft); }
+  .pace-row .pv-wrap { text-align: right; }
+  .pace-row .pv { font-family: var(--mono); font-weight: 600; color: var(--ink); font-size: 11.5px; }
+  .pace-row .pz { font-size: 9.5px; color: var(--ink-mute); display: block; }
+
+  /* Strength */
+  .str-block { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+  .str-hdr { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--line); }
+  .str-hdr .day-chip { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 5px; background: rgba(217,166,121,0.16); color: var(--accent); font-weight: 600; flex-shrink: 0; }
+  .str-hdr .str-title { font-family: var(--serif); font-size: 14px; font-weight: 600; }
+  .str-hdr .str-sub { font-size: 9.5px; color: var(--ink-mute); margin-top: 1px; }
+  .str-body { padding: 4px 14px; }
+  .ex-row { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: flex-start; }
+  .ex-row:last-child { border-bottom: none; }
+  .ex-num { font-family: var(--mono); font-size: 10px; color: var(--ink-mute); width: 14px; flex-shrink: 0; padding-top: 1px; }
+  .ex-name { font-size: 12px; font-weight: 600; color: var(--ink); line-height: 1.4; }
+  .ex-sets { font-size: 10.5px; color: var(--ink-soft); margin-top: 1px; }
+  .ex-why { font-size: 10px; color: var(--ink-mute); margin-top: 3px; line-height: 1.5; }
+  .ex-flag { display: inline-block; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: 1px; }
+
+  /* Injury */
+  .inj-card { display: flex; gap: 10px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 12px; background: var(--card); }
+  .inj-level { flex-shrink: 0; width: 56px; }
+  .inj-level .il-badge { display: block; font-size: 9px; font-weight: 700; padding: 4px 0; border-radius: 5px; text-align: center; }
+  .inj-body { flex: 1; min-width: 0; }
+  .inj-name { font-family: var(--serif); font-size: 13.5px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
+  .inj-cause { font-size: 11.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 7px; }
+  .inj-fix { font-size: 11px; color: var(--ink-soft); background: rgba(255,255,255,0.03); border-left: 2px solid var(--ink-mute); padding: 7px 10px; border-radius: 0 6px 6px 0; line-height: 1.6; }
+  .inj-fix strong { color: var(--ink); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 22px; margin: 16px 0; }
+  .timeline::before { content: ''; position: absolute; left: 6px; top: 5px; bottom: 5px; width: 1px; background: var(--line); }
+  .tl-item { position: relative; padding-bottom: 18px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before { content: ''; position: absolute; left: -22px; top: 3px; width: 8px; height: 8px; border-radius: 50%; background: var(--bg); border: 2px solid var(--ink-mute); }
+  .tl-item.key::before { border-color: var(--klscm); background: var(--klscm); }
+  .tl-time { font-family: var(--mono); font-size: 9.5px; color: var(--ink-mute); letter-spacing: 0.3px; }
+  .tl-title { font-size: 12.5px; font-weight: 600; color: var(--ink); margin: 2px 0 3px; }
+  .tl-desc { font-size: 11.5px; color: var(--ink-soft); line-height: 1.6; }
+
+  .chart-box { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 15px; margin-bottom: 16px; }
+  .chart-box h4 { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-mute); margin-bottom: 10px; }
+
+  /* ============ BOTTOM NAV ============ */
+  .bottomnav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+    background: var(--paper); border-top: 1px solid var(--line);
+    padding: 6px 2px calc(6px + var(--safe-bottom));
+    display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .bottomnav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex: 1; min-width: 56px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 5px 2px; border-radius: 8px; color: var(--ink-mute); background: none; border: none;
+  }
+  .nav-btn .nb-icon { width: 19px; height: 19px; }
+  .nav-btn .nb-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.6; }
+  .nav-btn .nb-label { font-size: 8.5px; font-weight: 500; letter-spacing: 0.1px; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn.active .nb-icon svg { stroke-width: 1.9; }
+
+  /* ============ DAY MODAL ============ */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100;
+    display: none; align-items: flex-end;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal-sheet {
+    background: var(--paper); width: 100%; border-radius: 18px 18px 0 0;
+    padding: 20px 20px calc(28px + var(--safe-bottom)); max-height: 80vh; overflow-y: auto;
+    border-top: 1px solid var(--line-bright);
+  }
+  .modal-handle { width: 36px; height: 4px; background: var(--line-bright); border-radius: 2px; margin: 0 auto 18px; }
+  .modal-date { font-family: var(--mono); font-size: 11px; color: var(--ink-mute); letter-spacing: 0.5px; }
+  .modal-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; text-transform: uppercase; letter-spacing: 0.4px; margin: 8px 0 4px; }
+  .modal-title { font-family: var(--serif); font-size: 21px; font-weight: 600; margin-bottom: 12px; line-height: 1.25; }
+  .modal-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+  .modal-row:last-child { border-bottom: none; }
+  .modal-row .mk { color: var(--ink-mute); }
+  .modal-row .mv { font-family: var(--mono); color: var(--ink); font-weight: 600; text-align: right; }
+  .modal-close { position: absolute; top: 16px; right: 16px; width: 28px; height: 28px; border-radius: 50%; background: var(--line); display: flex; align-items: center; justify-content: center; }
+  .modal-close svg { width: 13px; height: 13px; stroke: var(--ink-soft); stroke-width: 2; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<noscript>
+  This is an interactive training journal that requires JavaScript. Please enable JavaScript in your browser settings, or open this file in Safari/Chrome instead of a preview pane.
+</noscript>
+
+<div id="bootError">
+  <h2>Couldn't load the journal</h2>
+  <p id="bootErrorMsg">Something went wrong while starting the app. Try reopening this file directly in Safari (not AirDrop preview or Files app preview — use "Open in Safari").</p>
+</div>
+
+<div id="appRoot" style="display:none">
+  <div class="topbar">
+    <div class="id">
+      <div class="name">Jacob Wong</div>
+      <div class="tag">Training Journal</div>
+    </div>
+    <div class="races">
+      <div class="race-chip" style="background:var(--klscm-soft);color:var(--klscm)"><span class="dot" style="background:var(--klscm)"></span>10.4</div>
+      <div class="race-chip" style="background:var(--shanghai-soft);color:var(--shanghai)"><span class="dot" style="background:var(--shanghai)"></span>12.6</div>
+    </div>
+  </div>
+
+  <div id="views-root"></div>
+
+  <nav class="bottomnav" id="bottomNav"></nav>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal-sheet" id="modalSheet">
+      <div class="modal-handle"></div>
+      <div class="modal-close" id="modalClose"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+</div>
+
+<script id="dataScript">
+// ============ NAV CONFIG ============
+const NAV_ITEMS = [
+  { id:'overview', label:'Overview', icon:'<path d="M3 12l9-9 9 9M5 10v10h14V10"/>' },
+  { id:'calendar', label:'Calendar', icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>' },
+  { id:'form', label:'Form', icon:'<circle cx="12" cy="5" r="2"/><path d="M12 7v6l-4 8M12 13l4 8M12 13l-5-2M12 13l5-2"/>' },
+  { id:'injury', label:'Injury', icon:'<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M12 8v4M12 16h.01"/>' },
+  { id:'strength', label:'Strength', icon:'<path d="M4 12h2M18 12h2M6 8v8M18 8v8M9 12h6M9 9v6M15 9v6"/>' },
+  { id:'core', label:'Core', icon:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>' },
+  { id:'data', label:'Data', icon:'<path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/>' },
+  { id:'recovery', label:'Recovery', icon:'<path d="M12 21s-7-4.5-9.5-9C1 8 3 4 7 4c2 0 4 1.5 5 3 1-1.5 3-3 5-3 4 0 6 4 4.5 8-2.5 4.5-9.5 9-9.5 9z"/>' },
+];
+
+// ============ CALENDAR TYPE STYLES ============
+const TYPE_STYLE = {
+  easy:      {bg:'var(--easy-soft)',   c:'var(--easy)',      label:'EASY'},
+  long:      {bg:'var(--long-soft)',   c:'var(--long)',      label:'LONG'},
+  keylong:   {bg:'var(--long-soft)',   c:'var(--long)',      label:'KEY'},
+  interval:  {bg:'var(--interval-soft)',c:'var(--interval)', label:'INTV'},
+  vo2:       {bg:'var(--vo2-soft)',    c:'var(--vo2)',       label:'VO2'},
+  tempo:     {bg:'var(--tempo-soft)',  c:'var(--tempo)',     label:'TEMPO'},
+  mptempo:   {bg:'var(--tempo-soft)',  c:'var(--tempo)',     label:'MP'},
+  threshold: {bg:'var(--threshold-soft)',c:'var(--threshold)',label:'THR'},
+  fartlek:   {bg:'var(--interval-soft)',c:'var(--interval)', label:'FRTLK'},
+  taper:     {bg:'var(--easy-soft)',   c:'var(--easy)',      label:'TAPER'},
+  strides:   {bg:'var(--easy-soft)',   c:'var(--easy)',      label:'STRD'},
+  rest:      {bg:null, c:'var(--ink-mute)', label:'REST', cellClass:'rest'},
+  race:      {bg:null, c:null, label:'RACE', cellClass:'race-day'}
+};
+
+const TYPE_FULLNAME = {
+  easy:'Easy Run', long:'Long Run', keylong:'Key Long Run', interval:'Interval',
+  vo2:'VO2max Interval', tempo:'Tempo', mptempo:'Marathon Pace Tempo', threshold:'Threshold',
+  fartlek:'Fartlek', taper:'Taper', strides:'Strides', rest:'Rest Day', race:'Race Day'
+};
+
+// Cell data: [type, title, pace, wuCd, zone]
+// wuCd = warm-up/cool-down shown directly on the calendar tile
+const MONTHS = [
+  {
+    key:'jul', name:'July', phase:'Base Building Phase',
+    meta:'85–95km/wk · 5–6 days', leadBlanks:2, days:31,
+    paceRef: [
+      ['Easy / Recovery', '4:50–5:20/km', 'Z1–2 <130bpm'],
+      ['Long Run', '4:30–4:50/km', 'Z2 130–148bpm'],
+      ['Tempo (MP feel)', '3:45–3:55/km', 'Z3 150–158bpm'],
+      ['Threshold', '3:33–3:38/km', 'Z4 158–165bpm'],
+      ['Interval 1km', '3:20–3:25/km', 'Z4–5'],
+      ['VO2max', '3:12–3:18/km', 'Z5 >168bpm'],
+    ],
+    cells: {
+      1:['easy','Easy 12km','4:50–5:10/km','','Z1–2, HR <130bpm'],
+      2:['interval','10×1km Interval','3:20–3:25/km','WU 2km / CD 2km','Z4, 90s jog rest'],
+      3:['easy','Easy 10km','5:00–5:20/km','','Z1 recovery'],
+      4:['long','Long Run 28km','4:30–4:50/km','','Z2, HR 140–148bpm, all easy'],
+      5:['rest','Rest Day','—','',''],
+      7:['tempo','Tempo 12km','3:48–3:55/km','WU 2km / CD 2km','Z3 150–158bpm'],
+      8:['easy','Easy 13km','4:50–5:10/km','','Z1–2'],
+      9:['fartlek','Fartlek 14km','5×(3min@3:30+2min@4:50)','','Z3–4 surge pattern'],
+      10:['easy','Easy 12km','4:50–5:10/km','','Z1–2'],
+      11:['threshold','Threshold 3×4km','3:33–3:38/km','2min jog btw reps','Z4 158–165bpm'],
+      12:['long','Long Run 30km','4:35 → 3:48 last 10km','','Z2→Z3, practice MP finish'],
+      13:['rest','Rest Day','—','',''],
+      14:['vo2','VO2max 8×1km','3:12–3:18/km','90s full rest','Z5 >168bpm'],
+      15:['easy','Easy 12km','5:00–5:20/km','','Z1'],
+      16:['tempo','Tempo 14km','3:45–3:52/km','WU 2km / CD 2km','Z3 152–160bpm'],
+      17:['easy','Easy 13km','4:50–5:10/km','',''],
+      18:['threshold','Threshold 2×6km','3:33–3:38/km','3min jog btw','Z4'],
+      19:['long','Long Run 32km','4:35–4:50/km','','Z2, HR cap 150bpm'],
+      20:['rest','Rest Day','—','',''],
+      21:['easy','Easy 10km','5:00–5:20/km','','Cutback week begins'],
+      22:['interval','Interval 6×1km','3:20–3:25/km','90s rest','Z4, maintain speed feel'],
+      23:['easy','Easy 10km','5:00–5:20/km','',''],
+      24:['tempo','Tempo 8km','3:48–3:55/km','','Z3 light'],
+      25:['rest','Rest Day','—','',''],
+      26:['long','Long Run 22km','4:40–5:00/km','','Cutback long run'],
+      27:['rest','Rest Day','—','',''],
+      28:['threshold','Threshold 3×5km','3:33–3:38/km','2.5min jog btw','Z4'],
+      29:['easy','Easy 13km','4:50–5:10/km','',''],
+      30:['fartlek','Fartlek 14km','rolling terrain','','Z2–4 by feel/HR'],
+      31:['easy','Easy 12km','4:50–5:10/km','',''],
+    },
+    insights: [
+      ['info','Prioritize real easy runs','Quality session ratio has been too high. From July, guarantee 2 real easy days/week (&lt;130bpm) — less aimless "slow interval" pacing.'],
+      ['warn','Practice race-day fueling','One gel every 45min on long runs, drink at every aid station — start simulating race nutrition now.']
+    ]
+  },
+  {
+    key:'aug', name:'August', phase:'KLSCM Race-Specific Build',
+    meta:'Peak volume 95–105km/wk', leadBlanks:5, days:31,
+    paceRef: [
+      ['KLSCM Marathon Pace', '3:44–3:48/km', 'Z3 150–158bpm'],
+      ['Threshold', '3:32–3:37/km', 'Z4 158–165bpm'],
+      ['Interval 1km', '3:18–3:23/km', 'Z4–5'],
+      ['VO2max', '3:10–3:17/km', 'Z5 >168bpm'],
+      ['Long Run / Easy', '4:30–4:50/km', 'Z2 <148bpm'],
+      ['Rolling-terrain HR cap', '<165bpm', "Ease off uphill, don't chase pace"],
+    ],
+    cells: {
+      1:['long','Long MP Run 30km','10km@4:40 →16km@3:48','WU 10km / CD 4km','First big MP block'],
+      2:['rest','Rest Day','—','',''],
+      3:['interval','Interval 10×1km','3:18–3:23/km','90s jog','Z4–5'],
+      4:['easy','Easy 13km','4:50–5:10/km','',''],
+      5:['tempo','Tempo 2×6km','3:44–3:50/km','3min jog btw','Z3'],
+      6:['easy','Easy 13km','4:50–5:10/km','',''],
+      7:['threshold','Threshold 4×4km','3:32–3:37/km','2min jog btw','Z4'],
+      8:['long','Long Run 32km','4:35 → 3:48–3:52 last 10km','','Includes rolling terrain'],
+      9:['rest','Rest Day','—','',''],
+      10:['mptempo','MP Tempo 2×8km','3:44–3:48/km','4min jog btw','Z3 marathon pace feel'],
+      11:['easy','Easy 12km','5:00–5:20/km','',''],
+      12:['fartlek','Rolling Fartlek','6×(4min hard+2min easy)','','Z3–4, HR-led'],
+      13:['easy','Easy 13km','4:50–5:10/km','',''],
+      14:['interval','Interval 12×600m','2:03–2:07 (3:25/km)','60s rest','Z4–5'],
+      15:['keylong','Key Long Run 35km','10km@4:40 →20km@3:48','WU 10km / CD 5km','Most important July–Aug session'],
+      16:['rest','Rest Day','—','','Important — full recovery'],
+      17:['threshold','Threshold Long 20km','12km@3:33','WU 5km / CD 3km',''],
+      18:['easy','Easy 12km','5:00–5:20/km','',''],
+      19:['tempo','MP Tempo 3×5km','3:44–3:48/km','3min jog btw',''],
+      20:['easy','Easy 12km','4:50–5:10/km','',''],
+      21:['fartlek','Fartlek 12km','7×(1min@3:10+2min@5:00)','','Speed stimulus'],
+      22:['long','Rolling Long Run 30km','avg 4:15–4:25','','HR cap <165bpm'],
+      23:['rest','Rest Day','—','',''],
+      24:['interval','Interval 8×1km','3:18–3:22/km','90s rest','Z4–5'],
+      25:['easy','Easy 12km','5:00/km','',''],
+      26:['mptempo','MP Tempo 16km','3:44–3:48/km','','Longest single MP block'],
+      27:['easy','Easy 12km','—','',''],
+      28:['threshold','Threshold 2×6km','3:32–3:37/km','3min jog btw',''],
+      29:['long','Long Run 28km','20km@4:40 →8km@3:48','',''],
+      30:['rest','Rest Day','—','',''],
+      31:['easy','Easy 10km','—','','Taper begins'],
+    },
+    insights: [
+      ['warn','Hot & humid KL evenings',"Run MP sessions after 6pm. Race-day pace will feel 5–10s/km slower in training — that's normal."],
+      ['info','Aug 15 — key session','10km WU + 20km@MP is the single most important KLSCM session. Sleep 9h the night before.']
+    ]
+  },
+  {
+    key:'sep', name:'September', phase:'KLSCM Taper',
+    meta:'80→65→50→30km, 3-week step down', leadBlanks:1, days:30,
+    paceRef: [
+      ['MP confirmation', '3:44–3:48/km', 'Feel check'],
+      ['Threshold (light)', '3:32–3:37/km', 'Z4'],
+      ['Interval (maintain)', '3:18–3:23/km', 'Z4–5'],
+      ['Easy', '4:50–5:20/km', 'Z1–2'],
+    ],
+    cells: {
+      1:['interval','Interval 8×1km','3:18–3:23/km','','Reduced volume, speed maintained'],
+      2:['easy','Easy 12km','5:00–5:20/km','',''],
+      3:['tempo','Tempo 10km','3:44–3:50/km','','Z3'],
+      4:['easy','Easy 10km','—','',''],
+      5:['threshold','Threshold 2×5km','3:32–3:37/km','',''],
+      6:['long','Long Run 26km','20km easy +6km@3:48','',''],
+      7:['rest','Rest Day','—','',''],
+      8:['taper','Taper 6×1km','3:18–3:23/km','','Reduced volume, speed maintained'],
+      9:['easy','Easy 10km','—','',''],
+      10:['mptempo','MP Tempo 8km','3:44–3:48/km','',''],
+      11:['easy','Easy 8km','—','',''],
+      12:['taper','Taper 4×1km@MP','3:44–3:48','+strides',''],
+      13:['long','Long Run 20km','4:40–5:00/km','','Last longer run'],
+      14:['rest','Rest Day','—','',''],
+      15:['taper','Taper 5×1km','3:20/km','','Short speed touch'],
+      16:['easy','Easy 8km','—','',''],
+      17:['taper','MP Feel 6km','3:44–3:50/km','',''],
+      18:['easy','Easy 8km','—','',''],
+      19:['taper','Taper 3×2km@MP','—','+strides',''],
+      20:['long','Long Run 16km','4:50/km','',''],
+      21:['rest','Rest Day','—','',''],
+      22:['easy','Easy 8km','—','','12 days to race'],
+      23:['strides','Strides 6km+8×100m','—','','Leg activation'],
+      24:['easy','Easy 6km','—','',''],
+      25:['taper','MP Check 3km','3:44–3:48','','Feel confirmation'],
+      26:['easy','Easy 6km','—','',''],
+      27:['easy','Easy 8km','—','','Mental state first'],
+      28:['rest','Rest Day','—','',''],
+      29:['easy','Easy 5km','—','','Easy jog'],
+      30:['strides','Strides 4km+6×','—','','Activate legs'],
+    },
+    insights: [
+      ['warn','Manage taper psychology','"Heavy legs, flat feeling" during taper is normal. Don\u2019t add volume — trust the work already banked.'],
+      ['info','Carb loading','Shift carb ratio from 60% to 70% in the final 3 days. Add more rice to every meal.']
+    ]
+  },
+  {
+    key:'oct', name:'October', phase:'Race + Recovery',
+    meta:'Oct 4 KLSCM → 2wk no-run → Oct 20 Shanghai build begins', leadBlanks:3, days:31,
+    paceRef: [
+      ['KLSCM pacing plan', 'First half 3:50–3:55 / 2nd half 3:42–3:45', 'Conservative start'],
+      ['Shanghai MP prep (from 10/20)', '3:25–3:30/km', 'Build new pace feel'],
+      ['Threshold (Shanghai)', '3:18–3:22/km', 'Z4'],
+    ],
+    cells: {
+      1:['taper','Easy Jog 4km','—','','Conserve energy'],
+      2:['strides','Strides 3km+4×','—','','Leg activation'],
+      3:['rest','Rest Day','—','',''],
+      4:['race','KLSCM 2026','3:30am start','','Target 2:35–2:40 · Top 3'],
+      5:['rest','Rest Day','—','',''],
+      6:['rest','Rest Day','—','',''],
+      7:['rest','Rest Day','—','',''],
+      8:['rest','Rest Day','—','',''],
+      9:['rest','Rest Day','—','',''],
+      10:['rest','Rest Day','—','',''],
+      11:['easy','Easy Jog 20min','—','','If legs feel ok'],
+      12:['rest','Rest Day','—','',''],
+      13:['easy','Easy 6km','—','','HR <125bpm'],
+      14:['rest','Rest Day','—','',''],
+      15:['easy','Easy 8km','—','',''],
+      16:['rest','Rest Day','—','',''],
+      17:['easy','Easy 8km','—','',''],
+      18:['easy','Easy 12km','—','','Rebuilding begins'],
+      19:['rest','Rest Day','—','',''],
+      20:['interval','Interval 6×1km','3:25–3:30/km','','Shanghai build starts'],
+      21:['easy','Easy 12km','—','',''],
+      22:['mptempo','MP Tempo 3×5km','@3:27','','Building Shanghai MP feel'],
+      23:['easy','Easy 12km','—','',''],
+      24:['threshold','Threshold 3×4km','3:18–3:22/km','','Shanghai T pace'],
+      25:['long','Long Run 25km','18km@4:30 +7km@3:27','',''],
+      26:['rest','Rest Day','—','',''],
+      27:['vo2','VO2max 8×1km','3:08–3:13/km','','Z5 speed stimulus'],
+      28:['easy','Easy 12km','—','',''],
+      29:['mptempo','MP Tempo 12km','@3:27','',''],
+      30:['easy','Easy 12km','—','',''],
+      31:['fartlek','Fartlek 14km','—','','Shanghai flat-road feel'],
+    },
+    insights: [
+      ['bad','No running for 7 days post-KLSCM',"Marathon micro-damage takes 3–4 weeks to fully repair — don't add volume early even if you feel good."],
+      ['info','Shanghai MP = 3:27/km',"17 sec/km faster than KLSCM. Start building this pace feel precisely from Oct 20 — don't guess it."]
+    ]
+  },
+  {
+    key:'nov', name:'November', phase:'Shanghai Race-Specific Build', emClass:'shanghai-phase',
+    meta:'95–100km/wk → Week 4 cutback 75km', leadBlanks:6, days:30,
+    paceRef: [
+      ['Marathon Pace (MP)', '3:27/km', 'Z3 150–158bpm'],
+      ['Threshold', '3:18–3:22/km', 'Z4 158–165bpm'],
+      ['Interval 1km', '3:08–3:15/km', 'Z4–5'],
+      ['VO2max', '3:05–3:12/km', 'Z5 >168bpm'],
+      ['Long Run Easy', '4:30–4:50/km', 'Z2 <148bpm'],
+      ['MP precision target', '3:27 ±3sec', 'GPS pace check throughout'],
+    ],
+    cells: {
+      1:['keylong','Key Long Run 32km','10km@4:30 →18km@3:27','WU 10km / CD 4km',''],
+      2:['rest','Rest Day','—','',''],
+      3:['vo2','VO2max 10×1km','3:08–3:13/km','90s rest','Z5'],
+      4:['easy','Easy 13km','4:50–5:10/km','',''],
+      5:['mptempo','MP Tempo 3×6km','@3:27','3min jog','Shanghai MP segment'],
+      6:['easy','Easy 13km','—','',''],
+      7:['threshold','Threshold 3×5km','3:18–3:22/km','2.5min jog','Z4'],
+      8:['long','Long Run 30km','22km@4:30 →8km@3:27','',''],
+      9:['rest','Rest Day','—','',''],
+      10:['interval','Interval 8×1km','3:10–3:15/km','90s rest','Z4–5'],
+      11:['easy','Easy 12km','—','',''],
+      12:['mptempo','MP Long 22km','@3:27','','Longest single MP block'],
+      13:['easy','Easy 13km','—','',''],
+      14:['threshold','Threshold 4×4km','3:18–3:22/km','','Longest threshold session'],
+      15:['keylong','Key Long Run 35km','10km@4:30 →20km@3:27–3:30','WU 10km / CD 5km','Most important Shanghai session'],
+      16:['rest','Rest Day','—','','Important'],
+      17:['vo2','VO2max 6×1.2km','3:08–3:12/km','2min rest','Z5'],
+      18:['easy','Easy 12km','—','',''],
+      19:['mptempo','MP Tempo 2×8km','@3:27','3min jog','Simulate race splits'],
+      20:['easy','Easy 12km','—','',''],
+      21:['fartlek','Fartlek 12km','5×(5min@3:22+2min@5:00)','',''],
+      22:['long','Long Run 28km','20km@4:35 →8km@3:27','',''],
+      23:['rest','Rest Day','—','',''],
+      24:['taper','Taper 6×1km','3:10–3:15/km','','Maintain speed, reduce vol'],
+      25:['easy','Easy 10km','—','',''],
+      26:['mptempo','MP Check 10km','@3:27','','Feel confirmation'],
+      27:['easy','Easy 10km','—','',''],
+      28:['taper','Taper 4×1km','@3:10','+strides',''],
+      29:['long','Long Run 20km','4:40–5:00/km','',''],
+      30:['rest','Rest Day','—','',''],
+    },
+    insights: [
+      ['info','Nov 15 — most important session','10km WU + 20km@3:27 + 5km CD is the single most critical Shanghai prep run.'],
+      ['warn','KL heat is not a setback',"3:27 Threshold feels hard in KL heat — that's expected. Shanghai's 8°C race day can be 8–10s/km faster at the same HR."]
+    ]
+  },
+  {
+    key:'dec', name:'December', phase:'Shanghai Taper + Race', emClass:'shanghai-phase',
+    meta:'Dec 6 Shanghai Marathon · Target 2:25', leadBlanks:1, days:31,
+    paceRef: [
+      ['0–10km conservative', '3:30–3:33/km', 'Feel relaxed, control excitement'],
+      ['10–21km settle in', '3:27–3:30/km', 'Half ~1:12:00'],
+      ['21–30km hold', '3:25–3:27/km', ''],
+      ['30–37km decision zone', '3:24–3:27/km', "Hold MP if good, don't push if not"],
+      ['37–42km finish strong', '3:20–3:25/km', 'Empty the tank in the last 5km'],
+    ],
+    cells: {
+      1:['taper','Taper 5×1km','3:10–3:15/km','','Final speed touch'],
+      2:['easy','Easy 8km','—','','Low intensity'],
+      3:['taper','MP Check 3×2km','@3:27','+strides',''],
+      4:['rest','Rest Day','—','',''],
+      5:['taper','Shake-out 4km','easy jog','','Early sleep tonight'],
+      6:['race','Shanghai Marathon','7:00am start','','Target 2:25 · 3:27/km'],
+      7:['rest','Rest Day','—','',''],
+      8:['rest','Rest Day','—','',''],
+      9:['rest','Rest Day','—','',''],
+      10:['rest','Rest Day','—','',''],
+      11:['rest','Rest Day','—','',''],
+      12:['rest','Rest Day','—','',''],
+      13:['easy','Easy Jog 20min','—','','If body allows'],
+      14:['rest','Rest Day','—','',''],
+      15:['easy','Easy 6km','—','',''],
+      16:['rest','Rest Day','—','',''],
+      17:['easy','Easy 8km','—','',''],
+      18:['rest','Rest Day','—','',''],
+      19:['easy','Easy 10km','—','',''],
+      20:['easy','Easy 10km','—','','Confirm recovery'],
+      21:['rest','Rest Day','—','',''],
+      22:['easy','Easy 12km','—','',''],
+      23:['rest','Rest Day','—','',''],
+      24:['easy','Easy 10km','—','',''],
+      25:['rest','Rest Day','—','','Christmas'],
+      26:['easy','Easy 12km','—','',''],
+      27:['easy','Easy 14km','—','','New season prep'],
+      28:['rest','Rest Day','—','',''],
+      29:['easy','Easy 12km','—','',''],
+      30:['rest','Rest Day','—','',''],
+      31:['easy','Easy 10km','—','','Into the new season'],
+    },
+    insights: [
+      ['info','Fueling: 1 gel every 6km','About 7 gels total. Add a caffeinated gel after 30km.'],
+      ['warn','Possible rain, ~8°C in Shanghai','Pack light gloves + arm sleeves, discard after 15km. Wear broken-in shoes — never race in new ones.']
+    ]
+  },
+];
+
+</script>
+<script id="appScript">
+try {
+  // ============ VIEW TEMPLATES ============
+
+function viewOverview() {
+  return `
+  <div class="hero">
+    <div class="hero-eyebrow">Training Journal · Jul–Dec 2026</div>
+    <h1>From the KLSCM podium<br>to <em>2:25</em> in Shanghai</h1>
+    <p class="hero-sub">A complete training, form, injury-prevention and recovery reference built from 12 weeks of COROS data and both target races' course profiles.</p>
+    <div class="hero-races">
+      <div class="hero-race-card">
+        <div><div class="hrc-date">Oct 4 · 3:30am</div><div class="hrc-name">KLSCM 2026</div></div>
+        <div class="hrc-target">2:35–2:40<br>Men Open Top 3</div>
+      </div>
+      <div class="hero-race-card">
+        <div><div class="hrc-date">Dec 6 · 7:00am</div><div class="hrc-name">Shanghai Marathon</div></div>
+        <div class="hrc-target">2:25:00<br>MP 3:27/km</div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hs-val">2:31:21</div><div class="hs-label">PB Seoul 2024</div></div>
+      <div class="hero-stat"><div class="hs-val">85–105</div><div class="hs-label">Weekly km</div></div>
+      <div class="hero-stat"><div class="hs-val">144bpm</div><div class="hs-label">@4:07 aerobic</div></div>
+    </div>
+  </div>
+
+  <div class="view-eyebrow">00 — Overview</div>
+  <div class="view-title">Current Status</div>
+  <p class="view-lede">12 weeks of data show <strong>elite-level aerobic fitness</strong>, but quality-session ratio is too high, cadence is low, and both Achilles tendons are already symptomatic.</p>
+
+  <div class="stat-grid">
+    <div class="stat-cell"><div class="lbl">Predicted current PB</div><div class="val">2:32–2:35</div></div>
+    <div class="stat-cell"><div class="lbl">Aerobic efficiency</div><div class="val" style="color:var(--good)">4:07@144bpm</div></div>
+    <div class="stat-cell"><div class="lbl">Easy cadence</div><div class="val" style="color:var(--warn)">79–83 spm</div></div>
+    <div class="stat-cell"><div class="lbl">Quality session ratio</div><div class="val" style="color:var(--bad)">~95%</div></div>
+  </div>
+
+  <div class="note info"><strong>Strong aerobic base:</strong> 30–32km long runs holding 4:07–4:15/km at 140–149bpm — far above typical amateur level.</div>
+  <div class="note info"><strong>Plenty of speed reserve:</strong> 1km repeats at 3:13–3:21, VO2max power up to 279W — comfortable room above Shanghai's 3:27/km MP.</div>
+  <div class="note warn"><strong>Too much quality work:</strong> nearly every session carries intensity; true easy running (&lt;130bpm) is rare. Root cause of low cadence and Achilles overload.</div>
+  <div class="note bad"><strong>Bilateral Achilles + left shin splint history:</strong> needs systematic intervention starting now, not after symptoms worsen.</div>
+
+  <div class="sub-title">Six-Month Phase Overview</div>
+  <div class="wk-table">
+    ${[
+      ['Jul','Base Building','85–95km',''],
+      ['Aug','KLSCM Build','95–105km','var(--klscm-soft)'],
+      ['Sep','Taper','30–80km',''],
+      ['Oct','Race + Recovery','0–55km','var(--rest-soft)'],
+      ['Nov','Shanghai Build','75–100km','var(--shanghai-soft)'],
+      ['Dec','Taper + Race','8–55km','var(--rest-soft)'],
+    ].map(([m,p,km,bg]) => `
+      <div class="wk-row">
+        <div class="wk-day">${m}</div>
+        <div class="wk-cell" style="${bg?`background:${bg}`:''}">
+          <span class="wk-type">${p}</span>
+          <span class="wk-detail">${km}</span>
+        </div>
+      </div>
+    `).join('')}
+  </div>
+  `;
+}
+
+function viewCalendar() {
+  return `
+  <div class="view-eyebrow">01 — Training Calendar</div>
+  <div class="view-title">Training Calendar</div>
+  <p class="view-lede">Pace and warm-up/cool-down show directly on each tile. Tap a day for full session detail.</p>
+
+  <div class="sub-title">Weekly Pattern</div>
+  <div class="wk-phase-label">KLSCM Build Phase</div>
+  <div class="wk-table">
+    ${weekPattern([
+      ['Mon','easy','Easy 12km','4:50–5:10'],
+      ['Tue','interval','10×1km','3:20–3:25'],
+      ['Wed','easy','Easy 12km','4:50–5:10'],
+      ['Thu','threshold','3×4km','3:33–3:38'],
+      ['Fri','easy','10km+strength','easy jog'],
+      ['Sat','rest','Rest Day','—'],
+      ['Sun','long','28–35km','incl. MP block'],
+    ])}
+  </div>
+  <div class="wk-phase-label">Shanghai Build Phase</div>
+  <div class="wk-table">
+    ${weekPattern([
+      ['Mon','easy','Easy 12km','4:50/km'],
+      ['Tue','vo2','8×1km','3:08–3:13'],
+      ['Wed','easy','Easy 12km','4:50/km'],
+      ['Thu','mptempo','3×6km','@3:27'],
+      ['Fri','easy','10km+strength','easy jog'],
+      ['Sat','rest','Rest Day','—'],
+      ['Sun','keylong','10+20km','@MP+CD'],
+    ])}
+  </div>
+
+  <div class="legend">
+    ${Object.entries(TYPE_STYLE).filter(([k])=>k!=='race').map(([k,s])=>
+      `<span class="leg-item"><span class="leg-dot" style="background:${s.c}"></span>${TYPE_FULLNAME[k]}</span>`
+    ).join('')}
+  </div>
+
+  <div class="cal-tabs" id="calTabs">
+    ${MONTHS.map((m,i) => `<button class="cal-tab${i===0?' active':''}" data-month="${i}">${m.name}</button>`).join('')}
+  </div>
+
+  <div id="calMonthBody"></div>
+  `;
+}
+
+function weekPattern(rows) {
+  return rows.map(([day, type, title, pace]) => {
+    const s = TYPE_STYLE[type];
+    const cellCls = type === 'rest' ? 'wk-cell rest-cell' : 'wk-cell';
+    const bgStyle = type !== 'rest' ? `style="background:${s.bg}"` : '';
+    return `
+    <div class="wk-row">
+      <div class="wk-day">${day}</div>
+      <div class="${cellCls}" ${bgStyle}>
+        <span class="wk-type" style="color:${s.c}">${s.label}</span>
+        <span class="wk-detail"><strong>${title}</strong>${pace}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// cell = [type, title, pace, wuCd, zone]
+function dayCellHTML(num, cell) {
+  if (!cell) return `<div class="cal-day empty"></div>`;
+  const [type, title, pace, wuCd, zone] = cell;
+  const s = TYPE_STYLE[type];
+  const cls = s.cellClass ? `cal-day ${s.cellClass}` : 'cal-day';
+  const bgStyle = s.bg ? `style="background:${s.bg}"` : '';
+  const esc = (str) => (str||'').replace(/"/g,'&quot;');
+  const dataAttr = `data-type="${type}" data-title="${esc(title)}" data-pace="${esc(pace)}" data-wucd="${esc(wuCd)}" data-zone="${esc(zone)}" data-num="${num}"`;
+
+  const paceLine = (pace && pace !== '—') ? `<span class="dpace">${pace}</span>` : '';
+  const wucdLine = wuCd ? `<span class="dwucd">${wuCd}</span>` : '';
+
+  return `<div class="${cls}" ${bgStyle} ${dataAttr}>
+    <span class="dnum">${num}</span>
+    <span class="dtag" style="background:${s.c}25;color:${s.c}">${s.label}</span>
+    ${paceLine}
+    ${wucdLine}
+  </div>`;
+}
+
+function renderMonthBody(idx) {
+  const m = MONTHS[idx];
+  const dow = ['M','T','W','T','F','S','S'];
+  let cells = '';
+  for (let i=0;i<m.leadBlanks;i++) cells += dayCellHTML(null,null);
+  for (let d=1; d<=m.days; d++) {
+    const c = m.cells[d];
+    if (!c) { cells += dayCellHTML(d, ['rest','Rest Day','—','','']); continue; }
+    cells += dayCellHTML(d, c);
+  }
+  const insightsHtml = m.insights.map(([level,title,desc]) =>
+    `<div class="note ${level}"><strong>${title}:</strong> ${desc}</div>`
+  ).join('');
+  const paceHtml = m.paceRef.map(([l,v,z]) =>
+    `<div class="pace-row"><span class="pl">${l}</span><span class="pv-wrap"><span class="pv">${v}</span><span class="pz">${z}</span></span></div>`
+  ).join('');
+  const emClass = m.emClass || '';
+
+  return `
+    <div class="cal-month-hdr">
+      <div class="cal-month-name ${emClass}">${m.name}</div>
+      <div class="cal-month-meta"><strong>${m.phase}</strong><br>${m.meta}</div>
+    </div>
+    <div class="cal-grid">
+      ${dow.map(d=>`<div class="cal-hdr">${d}</div>`).join('')}
+      ${cells}
+    </div>
+    <div class="pace-table">${paceHtml}</div>
+    ${insightsHtml}
+  `;
+}
+
+function viewForm() {
+  return `
+  <div class="view-eyebrow">02 — Running Form</div>
+  <div class="view-title">Form Optimization</div>
+  <p class="view-lede">Weak leg kick-back, evening fatigue, and late-long-run cadence drop all trace back to <strong>under-activated glutes and hamstrings</strong> plus accumulated recovery debt.</p>
+
+  <div class="card" style="border-left:3px solid var(--bad)">
+    <h4 style="color:var(--bad)">Issue 1 · Weak kick-back</h4>
+    <p>Weak kick-back = <strong>insufficient glute and hamstring activation</strong>. Glutes drive ~60% of propulsion — if they're weak, the body leans on calves and Achilles instead. This directly explains your Achilles issue.</p>
+  </div>
+  <div class="card" style="border-left:3px solid var(--warn)">
+    <h4 style="color:var(--warn)">Issue 2 · Evening fatigue</h4>
+    <p>Three stacked causes: ①sleep debt from 1am bedtimes peaks by evening; ②near-daily quality sessions with no real easy recovery; ③heat and humidity push HR up 5–8bpm.</p>
+  </div>
+
+  <div class="sub-title">Form Checklist</div>
+  <div class="card">
+    <div class="dl-row"><span class="k">Foot strike</span><span class="v good">Midfoot — keep as is<span class="z">Avoid heel strike from overstriding</span></span></div>
+    <div class="dl-row"><span class="k">Kick-back height</span><span class="v bad">Currently insufficient<span class="z">Target: heel near 60–70% of hip height</span></span></div>
+    <div class="dl-row"><span class="k">Forward lean</span><span class="v warn">Check this<span class="z">~5–7° at MP; over-leaning loads Achilles</span></span></div>
+    <div class="dl-row"><span class="k">Arm swing</span><span class="v warn">Check range<span class="z">Forward swing shouldn't cross chest midline</span></span></div>
+    <div class="dl-row"><span class="k">Breathing rhythm</span><span class="v">Standardize<span class="z">Easy 4:2 / Threshold 3:2 / VO2 2:2</span></span></div>
+    <div class="dl-row"><span class="k">Cadence past 25km</span><span class="v warn">Watch closely<span class="z">If it drops &gt;3spm, consciously lift it</span></span></div>
+  </div>
+
+  <div class="note info"><strong>Video check suggestion:</strong> once a month, have a friend film 15 seconds from the side at the track. Check foot strike, knee flexion, kick-back height, torso angle vs. last month.</div>
+  `;
+}
+
+function viewInjury() {
+  return `
+  <div class="view-eyebrow">03 — Injury Management</div>
+  <div class="view-title">Injury Management</div>
+  <p class="view-lede">Bilateral Achilles discomfort + left shin splint history need <strong>systematic active prevention</strong>, not reaction after symptoms worsen.</p>
+
+  <div class="inj-card">
+    <div class="inj-level"><span class="il-badge" style="background:var(--bad-soft);color:var(--bad)">High Risk</span></div>
+    <div class="inj-body">
+      <div class="inj-name">Achilles Tendinopathy · Bilateral</div>
+      <div class="inj-cause">Causes: ①glute weakness forces Achilles compensation; ②low easy cadence increases ground contact time; ③too little recovery; ④sleep debt.</div>
+      <div class="inj-fix"><strong>Start now:</strong> Eccentric calf raises 3×15 every morning. Foam roll calves before training. Pain &gt;3/10 → easy or rest the next day.</div>
+    </div>
+  </div>
+  <div class="inj-card">
+    <div class="inj-level"><span class="il-badge" style="background:var(--warn-soft);color:var(--warn)">Moderate</span></div>
+    <div class="inj-body">
+      <div class="inj-name">Shin Splints · Left leg history</div>
+      <div class="inj-cause">Recurrence risk: sudden volume jumps, low cadence, insufficient rest days, hard-surface training.</div>
+      <div class="inj-fix"><strong>Prevent:</strong> weekly volume increase &lt;10%. Tibialis anterior toe taps 3×20 daily. Ice immediately if shin tightness appears.</div>
+    </div>
+  </div>
+  <div class="inj-card" style="border-color:var(--line)">
+    <div class="inj-level"><span class="il-badge" style="background:var(--good-soft);color:var(--good)">Monitor</span></div>
+    <div class="inj-body">
+      <div class="inj-name">Overtraining Syndrome</div>
+      <div class="inj-cause">Quality ratio near 100%. Long-term risk: HRV drop, lowered immunity, worsening sleep.</div>
+      <div class="inj-fix"><strong>Monitor:</strong> resting HR +5bpm above normal → drop intensity that day. Measure lying down for 30s each morning and log it.</div>
+    </div>
+  </div>
+
+  <div class="sub-title">Pain Grading Rules</div>
+  <div class="card">
+    <div class="dl-row"><span class="k">0–2/10 pain</span><span class="v good">Continue training</span></div>
+    <div class="dl-row"><span class="k">3–4/10 pain</span><span class="v warn">Reduce intensity, monitor</span></div>
+    <div class="dl-row"><span class="k">5+/10 pain</span><span class="v bad">Stop immediately, rest next day</span></div>
+    <div class="dl-row"><span class="k">Pain up 24h later</span><span class="v bad">Overload — cut next session's volume</span></div>
+  </div>
+  <div class="card">
+    <h4>Physio Focus</h4>
+    <p>Keep weekly sessions. Priorities: ①Achilles eccentric loading, ②calf fascia release, ③hip flexor & glute activation, ④left shin tibialis assessment.</p>
+  </div>
+  `;
+}
+
+function viewStrength() {
+  return `
+  <div class="view-eyebrow">04 — Strength Training</div>
+  <div class="view-title">Strength Training</div>
+  <p class="view-lede"><strong>Strength goes after easy runs — not after intensity sessions.</strong> Stacking fatigue on top of hard sessions degrades form and raises injury risk.</p>
+
+  <div class="note warn"><strong>Key fix:</strong> do strength 30min after the Monday or Friday easy run. No strength work on Tue/Thu intensity days.</div>
+
+  <div class="str-block">
+    <div class="str-hdr">
+      <span class="day-chip">Mon</span>
+      <div><div class="str-title">Lower Body + Achilles Focus</div><div class="str-sub">After easy run</div></div>
+    </div>
+    <div class="str-body">
+      ${exRow('1','Eccentric Calf Raise','3×15 single-leg · 3s lower','Achilles must-do','Highest evidence-grade Achilles prevention exercise.','bad')}
+      ${exRow('2','Bulgarian Split Squat','3×10/leg · 10–15kg','','Best single-leg glute/quad builder, drives kick-back power.')}
+      ${exRow('3','Nordic Hamstring Curl','3×6 progressive','Hamstring protection','Reduces hamstring strain risk by ~51%, do weekly without exception.','bad')}
+      ${exRow('4','Single-leg RDL','3×10/leg · 8–12kg','','Glute-hamstring synergy + single-leg balance for stance phase.')}
+      ${exRow('5','Lateral Band Walk','3×15 steps/direction','','Glute medius activation, prevents knee valgus collapse.')}
+    </div>
+  </div>
+
+  <div class="str-block">
+    <div class="str-hdr">
+      <span class="day-chip">Fri</span>
+      <div><div class="str-title">Core + Stability</div><div class="str-sub">After easy run</div></div>
+    </div>
+    <div class="str-body">
+      ${exRow('1','Dead Bug','3×10/side','','Core activation, improves torso stability while running.')}
+      ${exRow('2','Plank with Hip Extension','3×10/leg','','Functional core + glute work mimicking propulsion.')}
+      ${exRow('3','Tibialis Raise / Toe Taps','3×20 slow lower','Shin defense','Direct prevention against shin splint recurrence — non-negotiable given history.','warn')}
+      ${exRow('4','Hip Flexor Stretch + Activation','2min/side + 10 swings','','Counters tight hip flexors from desk sitting, frees up kick-back range.')}
+      ${exRow('5','Box Jump','3×6 soft landing','From Nov','Power work for finishing speed and acceleration.')}
+    </div>
+  </div>
+
+  <div class="note info"><strong>5-min warm-up before every session:</strong> hip circles 20/side → walking lunges 10 steps → single-leg balance 30s/leg → dynamic calf stretch 10× → high knees 10 reps.</div>
+  `;
+}
+
+function exRow(num, name, sets, flag, why, flagColor) {
+  const flagHtml = flag ? `<span class="ex-flag" style="background:var(--${flagColor||'easy'}-soft);color:var(--${flagColor||'easy'})">${flag}</span>` : '';
+  return `<div class="ex-row">
+    <span class="ex-num">${num}</span>
+    <div><div class="ex-name">${name}${flagHtml}</div><div class="ex-sets">${sets}</div><div class="ex-why">${why}</div></div>
+  </div>`;
+}
+
+function viewCore() {
+  return `
+  <div class="view-eyebrow">05 — Core Workout</div>
+  <div class="view-title">Core Training</div>
+  <p class="view-lede">Core stability determines <strong>whether your torso collapses and sways laterally late in long runs</strong>. More sway = more wasted energy.</p>
+
+  <div class="str-block">
+    <div class="str-hdr">
+      <span class="day-chip">2×/wk</span>
+      <div><div class="str-title">Core Circuit (10–12 min)</div><div class="str-sub">Slotted into strength days or after long runs</div></div>
+    </div>
+    <div class="str-body">
+      ${exRow('1','Dead Bug','3×10/side','','Anti-rotation control, reduces pelvic sway.')}
+      ${exRow('2','Side Plank + Hip Abduction','3×30s + 10 lifts/side','','Lateral chain stability for single-leg stance.')}
+      ${exRow('3','Pallof Press','3×12/side, band','','Anti-rotation, prevents late-run torso twist.')}
+      ${exRow('4','Bird Dog','3×10/side, slow','','Spinal neutral training, opposite shoulder/hip coordination.')}
+      ${exRow('5','Front Plank','3×45s','','Baseline endurance for late-run posture.')}
+    </div>
+  </div>
+
+  <div class="note info"><strong>Priority:</strong> consistency beats difficulty. 2×/week × 10min steady beats occasional hard circuits.</div>
+  `;
+}
+
+function viewData() {
+  return `
+  <div class="view-eyebrow">06 — Data Analysis</div>
+  <div class="view-title">Data Analysis</div>
+  <p class="view-lede">Cadence, power, and HR efficiency from 12 weeks of COROS data — and where to optimize next.</p>
+
+  <div class="card">
+    <h4>Cadence</h4>
+    <div class="dl-row"><span class="k">Easy runs</span><span class="v warn">79–87 spm</span></div>
+    <div class="dl-row"><span class="k">Intensity sessions</span><span class="v">87–89 spm</span></div>
+    <div class="dl-row"><span class="k">VO2max sessions</span><span class="v good">94 spm</span></div>
+    <div class="dl-row"><span class="k">Long runs</span><span class="v warn">88–90 spm</span></div>
+    <div class="dl-row"><span class="k">Elite target</span><span class="v good">90–95 spm</span></div>
+  </div>
+  <div class="card">
+    <h4>Power</h4>
+    <div class="dl-row"><span class="k">Easy runs</span><span class="v warn">190–200W</span></div>
+    <div class="dl-row"><span class="k">Threshold</span><span class="v">255W @3:44</span></div>
+    <div class="dl-row"><span class="k">VO2max</span><span class="v good">279W @3:28</span></div>
+    <div class="dl-row"><span class="k">MP target power</span><span class="v">240–250W</span></div>
+  </div>
+  <div class="card">
+    <h4>HR Efficiency</h4>
+    <div class="dl-row"><span class="k">30km long run avg HR</span><span class="v good">140–144bpm</span></div>
+    <div class="dl-row"><span class="k">30km@4:07 pace</span><span class="v good">144bpm Z2</span></div>
+    <div class="dl-row"><span class="k">Max HR</span><span class="v">176bpm</span></div>
+    <div class="dl-row"><span class="k">HR reserve</span><span class="v good">32bpm headroom</span></div>
+  </div>
+
+  <div class="chart-box">
+    <h4>Cadence vs Power by Session Type</h4>
+    <div id="cadChartSvg"></div>
+  </div>
+
+  <div class="card">
+    <h4>Issue: low easy-run cadence</h4>
+    <p>Intensity cadence at 87–89 is fine, but easy runs drop to 79–83 — meaning <strong>longer stride, longer ground contact time</strong> at slow paces, increasing impact load. This is a leading driver of Achilles and shin issues. Target: never below 85spm.</p>
+  </div>
+  <div class="card">
+    <h4>How to raise easy cadence</h4>
+    <p><strong>Metronome method:</strong> set 180bpm metronome, use on 2 easy runs/week — cadence shifts naturally within 2 weeks.</p>
+    <p><strong>Strides:</strong> 8×100m after every easy run to imprint the high-cadence pattern neuromuscularly.</p>
+  </div>
+
+  <div class="note info"><strong>Stride length:</strong> target ~1.65–1.72m at 3:27/km. Key is <strong>increasing hip extension, not overstriding</strong> — overstriding is the root cause of Achilles and shin injuries.</div>
+  `;
+}
+
+function viewRecovery() {
+  return `
+  <div class="view-eyebrow">07 — Recovery Cycle</div>
+  <div class="view-title">Recovery Cycle</div>
+  <p class="view-lede">Recovery between the two races determines whether Shanghai builds on KLSCM's fitness, or starts from scratch.</p>
+
+  <div class="sub-title">KLSCM Post-Race Recovery Timeline</div>
+  <div class="timeline">
+    <div class="tl-item key"><div class="tl-time">Race Day</div><div class="tl-title">Oct 4 finish</div><div class="tl-desc">Carbs + protein within 30min, ice knees and Achilles, compression socks.</div></div>
+    <div class="tl-item"><div class="tl-time">Week 1</div><div class="tl-title">No running</div><div class="tl-desc">7 days off running. Swim/bike easy 30min ok. Focus on sleep and nutrition repair.</div></div>
+    <div class="tl-item"><div class="tl-time">Week 2</div><div class="tl-title">Active recovery</div><div class="tl-desc">20–30min easy jog if pain-free. Track morning resting HR daily.</div></div>
+    <div class="tl-item key"><div class="tl-time">Oct 20</div><div class="tl-title">Shanghai build begins</div><div class="tl-desc">Rebuild speed feel from 6×1km@3:25–3:30 — don't jump straight back into high intensity.</div></div>
+  </div>
+
+  <div class="card">
+    <h4>Sleep (top priority)</h4>
+    <p>1am bedtime is the single biggest performance limiter. 90% of growth hormone releases between 10pm–2am of deep sleep. <strong>Target: lights out by 11pm by November.</strong></p>
+    <p>Start at 11:30pm and pull earlier by 15min/week over 4–6 weeks.</p>
+  </div>
+  <div class="card">
+    <h4>Weekly Recovery Signals</h4>
+    <div class="dl-row"><span class="k">Morning resting HR</span><span class="v">+5bpm → cut volume</span></div>
+    <div class="dl-row"><span class="k">Achilles/shin pain</span><span class="v">3/10+ → adjust the session</span></div>
+    <div class="dl-row"><span class="k">Sleep duration</span><span class="v">&lt;6h → prioritize sleep first</span></div>
+  </div>
+
+  <div class="sub-title">Nutrition Adjustments</div>
+  <div class="pace-table">
+    <div class="pace-row"><span class="pl">Breakfast</span><span class="pv-wrap"><span class="pv">+egg/tofu</span><span class="pz">Eat 2h before training</span></span></div>
+    <div class="pace-row"><span class="pl">Pre-run 30–45min</span><span class="pv-wrap"><span class="pv">Banana + oats</span><span class="pz">Stabilize blood sugar</span></span></div>
+    <div class="pace-row"><span class="pl">Post-run 30–45min</span><span class="pv-wrap"><span class="pv">Rice + protein + veg</span><span class="pz">1.6–2g/kg/day</span></span></div>
+    <div class="pace-row"><span class="pl">Long run fueling</span><span class="pv-wrap"><span class="pv">1 gel/45min</span><span class="pz">4+ gels for 30km</span></span></div>
+  </div>
+
+  <div class="note info"><strong>Supplements:</strong> Magnesium, Omega-3, Vitamin C/B and Lysine are all fine to keep. Consider adding Iron (check ferritin regularly) and Vitamin D.</div>
+  `;
+}
+
+const VIEWS = {
+  overview: viewOverview, calendar: viewCalendar, form: viewForm, injury: viewInjury,
+  strength: viewStrength, core: viewCore, data: viewData, recovery: viewRecovery
+};
+
+// ============ APP STATE ============
+let currentView = 'overview';
+let currentMonth = 0;
+
+function renderNav() {
+  const nav = document.getElementById('bottomNav');
+  nav.innerHTML = NAV_ITEMS.map(item => `
+    <button class="nav-btn${item.id===currentView?' active':''}" data-view="${item.id}">
+      <span class="nb-icon"><svg viewBox="0 0 24 24">${item.icon}</svg></span>
+      <span class="nb-label">${item.label}</span>
+    </button>
+  `).join('');
+  nav.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchView(btn.dataset.view));
+  });
+}
+
+function switchView(id) {
+  currentView = id;
+  const root = document.getElementById('views-root');
+  root.innerHTML = `<div class="view active">${VIEWS[id]()}</div>`;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === id));
+  window.scrollTo(0, 0);
+
+  if (id === 'calendar') {
+    initCalendarTabs();
+    renderCalendarMonth(currentMonth);
+  }
+  if (id === 'data') {
+    renderDataChart();
+  }
+}
+
+function initCalendarTabs() {
+  document.querySelectorAll('.cal-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      currentMonth = parseInt(tab.dataset.month, 10);
+      document.querySelectorAll('.cal-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      renderCalendarMonth(currentMonth);
+    });
+  });
+}
+
+function renderCalendarMonth(idx) {
+  const body = document.getElementById('calMonthBody');
+  body.innerHTML = renderMonthBody(idx);
+  attachDayHandlers();
+}
+
+function attachDayHandlers() {
+  document.querySelectorAll('.cal-day:not(.empty)').forEach(cell => {
+    cell.addEventListener('click', () => openDayModal(cell.dataset));
+  });
+}
+
+// ---- Day detail modal (tap for full session info) ----
+function openDayModal(d) {
+  const { type, title, pace, wucd, zone, num } = d;
+  const s = TYPE_STYLE[type];
+  const monthName = MONTHS[currentMonth].name;
+  let rows = '';
+  if (pace && pace !== '—') rows += `<div class="modal-row"><span class="mk">Pace</span><span class="mv">${pace}</span></div>`;
+  if (wucd) rows += `<div class="modal-row"><span class="mk">Warm-up / Cool-down</span><span class="mv">${wucd}</span></div>`;
+  if (zone) rows += `<div class="modal-row"><span class="mk">Notes</span><span class="mv" style="font-family:inherit;font-weight:400;text-align:right">${zone}</span></div>`;
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-date">${monthName.toUpperCase()} ${num}</div>
+    <div class="modal-tag" style="background:${s.bg||'var(--rest-soft)'};color:${s.c}">${TYPE_FULLNAME[type]}</div>
+    <div class="modal-title">${title || '—'}</div>
+    ${rows}
+  `;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeDayModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+}
+
+// ---- Data chart: dependency-free inline SVG ----
+function renderDataChart() {
+  const el = document.getElementById('cadChartSvg');
+  if (!el) return;
+  const labels = ['Easy', 'Fartlek', 'Interval', 'Threshold', 'VO2max'];
+  const cad = [82, 87, 88, 89, 94];
+  const pwr = [195, 223, 220, 255, 279];
+  const cadMin = 75, cadMax = 100, pwrMin = 150, pwrMax = 320;
+  const W = 320, H = 180, padL = 14, padR = 14, padB = 22, padT = 10;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const n = labels.length;
+  const groupW = plotW / n;
+  const barW = groupW * 0.3;
+
+  let bars = '';
+  labels.forEach((lab, i) => {
+    const gx = padL + i * groupW;
+    const cadH = (cad[i] - cadMin) / (cadMax - cadMin) * plotH;
+    const pwrH = (pwr[i] - pwrMin) / (pwrMax - pwrMin) * plotH;
+    const cadX = gx + groupW * 0.18;
+    const pwrX = gx + groupW * 0.52;
+    bars += `<rect x="${cadX}" y="${padT + plotH - cadH}" width="${barW}" height="${cadH}" fill="#5aa8d8" rx="2"/>`;
+    bars += `<rect x="${pwrX}" y="${padT + plotH - pwrH}" width="${barW}" height="${pwrH}" fill="#f0b050" rx="2"/>`;
+    bars += `<text x="${gx + groupW/2}" y="${H - 5}" font-size="8.5" fill="#9b9890" text-anchor="middle">${lab}</text>`;
+  });
+
+  el.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
+      <line x1="${padL}" y1="${padT+plotH}" x2="${W-padR}" y2="${padT+plotH}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      ${bars}
+    </svg>
+    <div style="display:flex;gap:14px;justify-content:center;margin-top:6px">
+      <span style="font-size:10px;color:#9b9890;display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#5aa8d8;display:inline-block"></span>Cadence spm</span>
+      <span style="font-size:10px;color:#9b9890;display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:#f0b050;display:inline-block"></span>Power W</span>
+    </div>
+  `;
+}
+
+// ============ BOOT ============
+renderNav();
+switchView('overview');
+document.getElementById('modalClose').addEventListener('click', closeDayModal);
+document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+  if (e.target.id === 'modalBackdrop') closeDayModal();
+});
+
+  document.getElementById('appRoot').style.display = 'block';
+} catch (err) {
+  document.getElementById('bootError').className = 'show';
+  document.getElementById('bootErrorMsg').textContent = 'Error: ' + err.message;
+  if (window.console) console.error(err);
+}
+</script>
+</body>
+</html>
